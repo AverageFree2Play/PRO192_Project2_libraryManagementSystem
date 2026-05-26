@@ -16,7 +16,7 @@ public class Main {
         System.out.println("Library Management System");
             do {
                 
-                System.out.println("***************Main Menu***************");
+                System.out.println("******MAIN MENU*****");
                 System.out.println("1.Book Management|2.Member Management|3.Borrowing Management|4.Reporting|5.Exit|Select:");
                 
                 choice = sc.nextInt();
