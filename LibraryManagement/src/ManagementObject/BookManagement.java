@@ -1,4 +1,4 @@
-package BookManagement;
+package ManagementObject;
 public class BookManagement {
     
 }
