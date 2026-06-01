@@ -2,7 +2,8 @@
  *
  * @author MSI-PC
  */
-//import Utilities.Menu;
+import Utilities.Menu;
+import ManagementObject.BookManagement;
 //import java.io.DataInput;
 import java.util.Scanner;
 public class Main {
@@ -10,18 +11,22 @@ public class Main {
     
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
+        BookManagement bookMgmt = new BookManagement();
         int choice;
-        System.out.println("Library Management System");
+        System.out.println("**********************");
+        System.out.println("LIBRARY MANAGEMENT SYSTEM");
             do {
                 
-                System.out.println("******MAIN MENU*****");
-                System.out.println("1.Book Management|2.Member Management|3.Borrowing Management|4.Reporting|5.Exit|Select:");
-                
+                System.out.println("**********************");
+                System.out.println("Welcome back!");
+                System.out.println("1.Manage Books\n2.Manage Members\n3.Borrowing/Returning\n4.Reports\n5.Exit");
+                System.out.println("----------------------");
+                System.out.println("Choose an option: ");
                 choice = sc.nextInt();
                 
                 switch (choice) {
                     case 1 :                                           
-                        System.out.println("You chose Book Management\n");
+                        bookMgmt.bookManage();
                     break;
                     case 2 :                       
                         System.out.println("You chose Member Management\n");
