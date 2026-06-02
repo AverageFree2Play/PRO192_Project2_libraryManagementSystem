@@ -5,7 +5,7 @@ import Utilities.DataValidation;
 public class Book {
     private String ID,Title,Author,Genre,PubYear;
     private int Quantity;
-    
+    // CONSTRUCTORS
     public Book() {
         ID = "";
         Title = "";
@@ -23,15 +23,15 @@ public class Book {
         setPubYear(PubYear);
         setQuantity(Quantity);
     }
-
+    // METHODS
     public String getID() {
         return ID;
     }
     public void setID(String ID) throws Exception {
         if(!DataValidation.checkStringWithFormat(ID.toUpperCase(),"B\\d{3}")){
             throw new Exception("Invalid ID. Format: Bxxx. Got:" + ID);
-       }        
-    this.ID = ID;
+        }        
+        this.ID = ID;
     }
 
     public String getTitle() {
