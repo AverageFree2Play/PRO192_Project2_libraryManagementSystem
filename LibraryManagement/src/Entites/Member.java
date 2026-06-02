@@ -19,7 +19,7 @@ public class Member {
         this.Email = Email;
     }
 
-    public String getID() {
+    public String getMemberID() {
         return ID;
     }
     public void setID(String ID) throws Exception {
