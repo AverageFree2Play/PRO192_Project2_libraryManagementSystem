@@ -1,4 +1,4 @@
 package DataObject;
-public class BookData{
+public class BorrowData {
     
 }

@@ -1,3 +1,5 @@
+package MainProgram;
+
 /**
  *
  * @author MSI-PC
@@ -12,6 +14,7 @@ public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         BookManagement bookMgmt = new BookManagement();
+        boolean run = true;
         int choice;
         System.out.println("**********************");
         System.out.println("LIBRARY MANAGEMENT SYSTEM");
@@ -26,8 +29,7 @@ public class Main {
                 
                 switch (choice) {
                     case 1 :                                           
-                        bookMgmt.bookManage();
-                    break;
+                        bookMgmt.bookManage(); break;
                     case 2 :                       
                         System.out.println("You chose Member Management\n");
                     break;
@@ -39,12 +41,18 @@ public class Main {
                     break;
                     case 5 :
                         System.out.println("Good bye!\n");
+                        run = false;
                     break;
                     default :
                         System.out.println("Invalid choice. Please try again!\n\n");
                 }
-            } while (choice!=5);
+            } while (run);
+            sc.close();
 
         }
+
+    public void main() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
     }
     
