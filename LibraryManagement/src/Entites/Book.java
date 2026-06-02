@@ -3,8 +3,8 @@ package Entites;
 import Utilities.DataValidation;
 
 public class Book {
-    String ID,Title,Author,Genre,PubYear;
-    int Quantity;
+    private String ID,Title,Author,Genre,PubYear;
+    private int Quantity;
     
     public Book() {
         ID = "";
@@ -15,17 +15,16 @@ public class Book {
         Quantity = 1;
     }
 
-    public Book(String ID, String Title, String Author, String Genre, String PubYear, int Quantity) {
-        this.ID = ID;
-        this.Title = Title;
-        this.Author = Author;
-        this.Genre = Genre;
-        this.PubYear = PubYear;
-        this.Quantity = Quantity;
+    public Book(String ID, String Title, String Author, String Genre, String PubYear, int Quantity) throws Exception {
+        setID(ID);
+        setTitle(Title);
+        setAuthor(Author);
+        setGenre(Genre);
+        setPubYear(PubYear);
+        setQuantity(Quantity);
     }
 
     public String getID() {
-        
         return ID;
     }
     public void setID(String ID) throws Exception {
