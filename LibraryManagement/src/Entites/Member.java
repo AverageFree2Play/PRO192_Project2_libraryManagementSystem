@@ -4,21 +4,24 @@ import Utilities.DataValidation;
 
 public class Member {
     private String ID,Name,Phone,Email;
+    private boolean IsPremium;
 
     public Member() {
         ID = "";
         Name = "N/A";
         Phone = "000.000.0000";
         Email = "N/A";
+        IsPremium = false;
     }
-
-    public Member(String ID, String Name, String Phone, String Email) {
+    // CONSTRUCTOR
+    public Member(String ID, String Name, String Phone, String Email,boolean IsPremium) {
         this.ID = ID;
         this.Name = Name;
         this.Phone = Phone;
         this.Email = Email;
+        this.IsPremium = IsPremium;
     }
-
+    // METHODS
     public String getMemberID() {
         return ID;
     }
