@@ -24,7 +24,7 @@ public class Book {
         setQuantity(Quantity);
     }
     // METHODS
-    public String getID() {
+    public String getBookID() {
         return ID;
     }
     public void setID(String ID) throws Exception {

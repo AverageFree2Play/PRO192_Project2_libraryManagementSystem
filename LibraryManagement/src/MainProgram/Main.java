@@ -6,16 +6,19 @@ package MainProgram;
  */
 import Utilities.Menu;
 import ManagementObject.BookManagement;
+import ManagementObject.BorrowManagement;
 //import java.io.DataInput;
 import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         BookManagement bookMgmt = new BookManagement();
+        BorrowManagement brwMgmt = new BorrowManagement();
         boolean run = true;
         int choice;
         System.out.println("**********************");
         System.out.println("LIBRARY MANAGEMENT SYSTEM");
+        
             do {
                 
                 System.out.println("**********************");
@@ -32,7 +35,7 @@ public class Main {
                         System.out.println("You chose Member Management\n");
                     break;
                     case 3 :
-                        System.out.println("You chose Borrowing Management\n");
+                        brwMgmt.borrowManage();
                     break;
                     case 4 :
                         System.out.println("You chose Reporting\n");

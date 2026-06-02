@@ -7,8 +7,8 @@ public class BookManagement {
         int choice;
         System.out.println("You have enter Manage Books session!\n");
         do{
-            System.out.println("=====Manage Menu=====");
-            System.out.println("1. Add book\n2. Update book\n3. Remove book\n4. View all books\n5. Search books\n6. Return\n");
+            System.out.println("=====BOOK MANAGE MENU=====");
+            System.out.println("1. Add book\n2. Update book\n3. Remove book\n4. View all books\n5. Search books\n6. Back\n");
             System.out.println("Choose an option(1-6): ");
       
             choice = sc.nextInt();
