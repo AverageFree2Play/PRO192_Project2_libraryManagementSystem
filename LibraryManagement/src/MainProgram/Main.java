@@ -9,8 +9,6 @@ import ManagementObject.BookManagement;
 //import java.io.DataInput;
 import java.util.Scanner;
 public class Main {
-
-    
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         BookManagement bookMgmt = new BookManagement();
@@ -48,11 +46,10 @@ public class Main {
                 }
             } while (run);
             sc.close();
-
         }
 
-    public void main() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+        public void main() {
+            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        }
     }
     
