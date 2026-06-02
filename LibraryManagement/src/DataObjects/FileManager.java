@@ -7,9 +7,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
 
-/**
- * @author SwordLake
- */
 public class FileManager{
     private String fileName; 
 
