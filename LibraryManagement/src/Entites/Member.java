@@ -21,7 +21,7 @@ public class Member {
         this.Email = Email;
         this.IsPremium = IsPremium;
     }
-
+    // METHODS
     public String getMemberID() {
         return ID;
     }
