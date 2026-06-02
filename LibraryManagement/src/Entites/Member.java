@@ -13,7 +13,7 @@ public class Member {
         Email = "N/A";
         IsPremium = false;
     }
-
+    // CONSTRUCTOR
     public Member(String ID, String Name, String Phone, String Email,boolean IsPremium) {
         this.ID = ID;
         this.Name = Name;
