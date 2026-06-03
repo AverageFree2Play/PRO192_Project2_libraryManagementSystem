@@ -7,6 +7,7 @@ package MainProgram;
 import Utilities.Menu;
 import ManagementObject.BookManagement;
 import ManagementObject.BorrowManagement;
+import ManagementObject.MemberManagement;
 //import java.io.DataInput;
 import java.util.Scanner;
 
@@ -16,6 +17,7 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         BookManagement bookMgmt = new BookManagement();
         BorrowManagement brwMgmt = new BorrowManagement();
+        MemberManagement mbMgmt = new MemberManagement();
         boolean run = true;
         int choice;
         System.out.println("**********************");
@@ -35,7 +37,7 @@ public class Main {
                     bookMgmt.bookManage();
                     break;
                 case 2:
-                    System.out.println("You chose Member Management\n");
+                    mbMgmt.memManage();
                     break;
                 case 3:
                     brwMgmt.borrowManage();
