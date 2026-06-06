@@ -8,6 +8,7 @@ import Utilities.Menu;
 import ManagementObject.BookManagement;
 import ManagementObject.BorrowManagement;
 import ManagementObject.MemberManagement;
+import ManagementObject.Reporting;
 //import java.io.DataInput;
 import java.util.Scanner;
 
@@ -18,9 +19,10 @@ public class Main {
         BookManagement bookMgmt = new BookManagement();
         BorrowManagement brwMgmt = new BorrowManagement();
         MemberManagement mbMgmt = new MemberManagement();
+        Reporting rp = new Reporting();
         boolean run = true;
         int choice;
-        System.out.println("**********************");
+        System.out.println("**********************\n");
         
 
         do {
@@ -43,7 +45,7 @@ public class Main {
                     brwMgmt.borrowManage();
                     break;
                 case 4:
-                    System.out.println("You chose Reporting\n");
+                    rp.reporting();
                     break;
                 case 5:
                     System.out.println("Good bye!\n");
