@@ -17,20 +17,20 @@ public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         BookManagement bookMgmt = new BookManagement();
+
         BorrowManagement brwMgmt = new BorrowManagement();
         MemberManagement mbMgmt = new MemberManagement();
         Reporting rp = new Reporting();
         boolean run = true;
         int choice;
-        System.out.println("**********************\n");
-        
+        System.out.println("*".repeat(20)+"\n");
 
         do {
             System.out.println("LIBRARY MANAGEMENT SYSTEM");
-            System.out.println("**********************");
+            System.out.println("*".repeat(20));
             System.out.println("Welcome back!");
             System.out.println("1.Manage Books\n2.Manage Members\n3.Borrowing/Returning\n4.Reports\n5.Exit");
-            System.out.println("----------------------");
+            System.out.println("-".repeat(20));
             System.out.println("Choose an option: ");
             choice = sc.nextInt();
 
@@ -58,7 +58,4 @@ public class Main {
         sc.close();
     }
 
-    public void main() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 }
