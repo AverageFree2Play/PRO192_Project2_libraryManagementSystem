@@ -1,7 +1,10 @@
 package ManagementObject;
 
 import Entites.Book;
+
 import Utilities.DataInput;
+import Utilities.Constants;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Scanner;
@@ -9,15 +12,17 @@ import java.util.Scanner;
 public class BookManagement {
 
     private ArrayList<Book> bookList = new ArrayList();
+    Constants con = new Constants();
 
     public void bookManage() {
         Scanner sc = new Scanner(System.in);
         BookManagement bookManagement = new BookManagement();
+        
 
         int choice;
         System.out.println("You have enter Manage Books session!\n");
         do {
-            System.out.println("=".repeat(10) + "BOOK MANAGE MENU" + "=".repeat(10));
+            System.out.println(con.Seperator + "BOOK MANAGE MENU" + con.Seperator);
             System.out.println("1. Add book\n2. Update book\n3. Remove book\n4. View all books\n5. Search books\n6. Back\n");
             System.out.println("Choose an option(1-6): ");
 
@@ -78,13 +83,13 @@ public class BookManagement {
             System.out.println("No books in the list.\n");
             return;
         }
-        System.out.println("-".repeat(50));
+        System.out.println(con.LongSeperator);
         System.out.format("%-5s | %-30s | %-20s | %-15s | %4s | %s%n", "ID", "Title", "Author", "Genre", "Year", "Amount");
-        System.out.println("-".repeat(50));
+        System.out.println(con.LongSeperator);
         for (Book book : bookList) {
             System.out.println(book);
         }
-        System.out.println("-".repeat(50));
+        System.out.println(con.LongSeperator);
     }
 
     public Book findBookByID(String id) {
