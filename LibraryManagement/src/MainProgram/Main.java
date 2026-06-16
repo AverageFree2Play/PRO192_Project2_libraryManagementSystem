@@ -10,6 +10,7 @@ import ManagementObject.BorrowManagement;
 import ManagementObject.MemberManagement;
 import ManagementObject.Reporting;
 import Utilities.Constants;
+import Utilities.DataInput;
 //import java.io.DataInput;
 import java.util.Scanner;
 
@@ -27,40 +28,43 @@ public class Main {
         // VARIABLES
         boolean run = true;
         int choice;
-        String Seperator = con.Seperator;
         
-        System.out.println(Seperator+"\n");
+        System.out.println(con.Seperator+"\n");
+        try {
+            do {
+                System.out.println("LIBRARY MANAGEMENT SYSTEM");
+                System.out.println(con.Seperator);
+                System.out.println("Welcome back!");
+                System.out.println("1.Manage Books\n2.Manage Members\n3.Borrowing/Returning\n4.Reports\n5.Exit");
+                System.out.println(con.Seperator);
+                System.out.println("Choose an option: ");
+                // choice = sc.nextInt();
+                choice = DataInput.getIntegerNumber();
 
-        do {
-            System.out.println("LIBRARY MANAGEMENT SYSTEM");
-            System.out.println(Seperator);
-            System.out.println("Welcome back!");
-            System.out.println("1.Manage Books\n2.Manage Members\n3.Borrowing/Returning\n4.Reports\n5.Exit");
-            System.out.println(Seperator);
-            System.out.println("Choose an option: ");
-            choice = sc.nextInt();
-
-            switch (choice) {
-                case 1:
-                    bookMgmt.bookMenu();
-                    break;
-                case 2:
-                    mbMgmt.memMenu();
-                    break;
-                case 3:
-                    brwMgmt.borrowMenu();
-                    break;
-                case 4:
-                    rp.reportMenu();
-                    break;
-                case 5:
-                    System.out.println("Good bye!\n");
-                    run = false;
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please try again!\n\n");
-            }
-        } while (run);
+                switch (choice) {
+                    case 1:
+                        bookMgmt.bookMenu();
+                        break;
+                    case 2:
+                        mbMgmt.memMenu();
+                        break;
+                    case 3:
+                        brwMgmt.borrowMenu();
+                        break;
+                    case 4:
+                        rp.reportMenu();
+                        break;
+                    case 5:
+                        System.out.println("Good bye!\n");
+                        run = false;
+                        break;
+                    default:
+                        System.out.println("Invalid choice. Please try again!\n\n");
+                }
+            } while (run);
+        } catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
         sc.close();
     }
 
