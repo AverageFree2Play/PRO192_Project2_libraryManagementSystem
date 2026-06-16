@@ -14,10 +14,8 @@ public class BookManagement {
     private ArrayList<Book> bookList = new ArrayList();
     Constants con = new Constants();
 
-    public void bookManage() {
-        Scanner sc = new Scanner(System.in);
-        BookManagement bookManagement = new BookManagement();
-        
+    public void bookMenu() {
+        Scanner sc = new Scanner(System.in);        
 
         int choice;
         System.out.println("You have enter Manage Books session!\n");

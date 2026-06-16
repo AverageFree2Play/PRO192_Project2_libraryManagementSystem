@@ -3,7 +3,7 @@ package ManagementObject;
 import java.util.Scanner;
 
 public class BorrowManagement {
-    public void borrowManage(){
+    public void borrowMenu(){
         Scanner sc = new Scanner(System.in);
         
         int choice;

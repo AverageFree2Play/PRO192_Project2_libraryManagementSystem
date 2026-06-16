@@ -1,7 +1,7 @@
 package ManagementObject;
 import java.util.Scanner;
 public class MemberManagement {
-    public void memManage(){
+    public void memMenu(){
         Scanner sc = new Scanner(System.in);
         int choice;
         System.out.println("You have enter Member Management session!");

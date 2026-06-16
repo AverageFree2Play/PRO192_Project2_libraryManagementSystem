@@ -1,7 +1,7 @@
 package ManagementObject;
 import java.util.Scanner;
 public class Reporting {
-    public void reporting(){
+    public void reportMenu(){
         Scanner sc = new Scanner(System.in);
         int choice;
         System.out.println("You have enter Reporting page!");

@@ -42,16 +42,16 @@ public class Main {
 
             switch (choice) {
                 case 1:
-                    bookMgmt.bookManage();
+                    bookMgmt.bookMenu();
                     break;
                 case 2:
-                    mbMgmt.memManage();
+                    mbMgmt.memMenu();
                     break;
                 case 3:
-                    brwMgmt.borrowManage();
+                    brwMgmt.borrowMenu();
                     break;
                 case 4:
-                    rp.reporting();
+                    rp.reportMenu();
                     break;
                 case 5:
                     System.out.println("Good bye!\n");
