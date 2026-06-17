@@ -12,7 +12,7 @@ import java.util.Scanner;
 public class BookManagement {
 
     private ArrayList<Book> bookList = new ArrayList();
-    Constants con = new Constants();
+    private Constants con = new Constants();
 
     public void bookMenu() {
         Scanner sc = new Scanner(System.in);        
