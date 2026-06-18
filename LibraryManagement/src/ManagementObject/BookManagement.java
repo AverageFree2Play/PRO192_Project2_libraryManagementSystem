@@ -44,7 +44,7 @@ public class BookManagement {
                     break;
                 case 6:
                     break;
-                default:
+                default:    
                     System.out.println("Invalid choice. Please try again!\n\n");
             }
         } while (choice != 6);
@@ -58,7 +58,6 @@ public class BookManagement {
         int PubYear = DataInput.getIntegerNumber("Enter public year:");
         int Quantity = DataInput.getIntegerNumber("Enter recent amount:");
         return new Book(ID, Title, Author, Genre, PubYear, Quantity);
-
     }
 
     public void addBook() {
