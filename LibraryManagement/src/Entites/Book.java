@@ -50,7 +50,7 @@ public class Book {
 
     public int getPubYear(){return PubYear;}
     public void setPubYear(int PubYear) throws Exception{
-        if(!DataValidation.isValidYear(PubYear)){
+        if(!DataValidation.checkIfValidYear(PubYear)){
             throw new Exception("Invalid year. Got:" + PubYear);
         }
         

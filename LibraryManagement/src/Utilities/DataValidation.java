@@ -44,7 +44,7 @@ public final class DataValidation {
          return result;
     }
     //--------------------------------------------------  
-    public static boolean isValidYear(int year) {
+    public static boolean checkIfValidYear(int year) {
         int currentYear = Year.now().getValue();
       
         return year >= 1 && year <= currentYear + 10;
