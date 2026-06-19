@@ -23,50 +23,37 @@ public class Book {
         setPubYear(PubYear);
         setQuantity(Quantity);
     }
-
     
     // METHODS
-    public String getBookID() {
-        return ID;
-    }
-    public void setID(String ID) throws Exception {
+    public String getBookID(){return ID;}
+    public void setID(String ID) throws Exception{
         if(!DataValidation.checkStringWithFormat(ID.toUpperCase(),"B\\d{2}")){
             throw new Exception("Invalid ID. Format: Bxx. Got:" + ID);
         }        
         this.ID = ID;
     }
 
-    public String getTitle() {
-        return Title;
-    }
+    public String getTitle(){return Title;}
     public void setTitle(String Title) {
         this.Title = Title;
     }
 
-    public String getAuthor() {
-        return Author;
-    }
-    public void setAuthor(String Author) {
+    public String getAuthor(){return Author;}
+    public void setAuthor(String Author){
         this.Author = Author;
     }
 
-    public String getGenre() {
-        return Genre;
-    }
-    public void setGenre(String Genre) {
+    public String getGenre(){return Genre;}
+    public void setGenre(String Genre){
         this.Genre = Genre;
     }
 
-    public int getPubYear() {
-        return PubYear;
-    }
-    public void setPubYear(int PubYear) {
+    public int getPubYear(){return PubYear;}
+    public void setPubYear(int PubYear){
         this.PubYear = PubYear;
     }
 
-    public int getQuantity() {
-        return Quantity;
-    }
+    public int getQuantity(){return Quantity;}
     public void setQuantity(int Quantity) {
         this.Quantity = Quantity;
     }    
