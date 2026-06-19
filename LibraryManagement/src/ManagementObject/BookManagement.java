@@ -18,6 +18,7 @@ public class BookManagement {
         Scanner sc = new Scanner(System.in);        
 
         int choice;
+        int yesnochoice;
         System.out.println("You have enter Manage Books session!\n");
         do {
             System.out.println(con.Seperator + "BOOK MANAGE MENU" + con.Seperator);
@@ -34,7 +35,14 @@ public class BookManagement {
                     break;
                 case 3:
                     String id = DataInput.getString("Enter the book's ID to remove: ");
-                    removeBook(id);
+                    System.out.println("Do you really want to remove this book?(1/0): ");
+                    yesnochoice = sc.nextInt();
+                    if(yesnochoice == 0){
+                        break;
+                    }
+                    else{
+                        removeBook(id);
+                    }
                     break;
                 case 4:
                     System.out.println("Books list: ");
@@ -106,6 +114,7 @@ public class BookManagement {
     
     public boolean removeBook(String id){
         Book book = findBookByID(id);
+        
         if(book == null){
             return false;
         }
