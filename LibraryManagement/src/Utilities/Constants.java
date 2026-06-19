@@ -1,7 +1,7 @@
 package Utilities;
 
 public class Constants {
-    public String Seperator = "====================";
-    public String LongSeperator = "============================================================";
+    public String Seperator = "=".repeat(30);
+    public String LongSeperator = "=".repeat(100);
 
 }

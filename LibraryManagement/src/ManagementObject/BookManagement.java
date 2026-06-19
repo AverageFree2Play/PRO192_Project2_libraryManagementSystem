@@ -33,7 +33,8 @@ public class BookManagement {
                     System.out.println("You chose Update book!");
                     break;
                 case 3:
-                    System.out.println("You chose Remove book!");
+                    String id = DataInput.getString("Enter the book's ID to remove: ");
+                    removeBook(id);
                     break;
                 case 4:
                     System.out.println("Books list: ");
@@ -109,6 +110,9 @@ public class BookManagement {
             return false;
         }
         bookList.remove(book);
+        System.out.println("Book removed!");
         return true;
     }
+
+    
 }
