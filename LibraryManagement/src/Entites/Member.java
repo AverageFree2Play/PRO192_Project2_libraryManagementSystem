@@ -22,9 +22,7 @@ public class Member {
         this.IsPremium = IsPremium;
     }
     // METHODS
-    public String getMemberID() {
-        return ID;
-    }
+    public String getMemberID(){return ID;}
     public void setID(String ID) throws Exception {
         if(!DataValidation.checkStringWithFormat(ID.toUpperCase(),"M\\d{3}")){
             throw new Exception("Invalid ID. Format: Mxxx. Got:" + ID);
@@ -32,26 +30,24 @@ public class Member {
         this.ID = ID;
     }
 
-    public String getName(){
-        return Name;
-    }
-    public void setName(String Name) {
+    public String getName(){return Name;}
+    public void setName(String Name){
         this.Name = Name;
     }
 
-    public String getPhone() {
-        return Phone;
-    }
-
-    public void setPhone(String Phone) {
+    public String getPhone(){return Phone;}
+    public void setPhone(String Phone) throws Exception{
+        if(!DataValidation.checkIfValidPhoneNumber(Phone)){
+            throw new Exception("Invalid phone number. Format: xxx.xxx.xxxx. Got:" + Phone);
+        }
         this.Phone = Phone;
     }
 
-    public String getEmail() {
-        return Email;
-    }
-
-    public void setEmail(String Email) {
+    public String getEmail(){return Email;}
+    public void setEmail(String Email) throws Exception {
+        if(!DataValidation.checkStringWithFormat(Email,"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$")){
+            throw new Exception("Email is invalid.");
+        }
         this.Email = Email;
     }
     

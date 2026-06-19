@@ -1,6 +1,7 @@
 package Utilities;
 
 import java.time.Year;
+import java.util.regex.Pattern;
 /**
  * @author SwordLake
  */
@@ -48,5 +49,14 @@ public final class DataValidation {
         int currentYear = Year.now().getValue();
       
         return year >= 1 && year <= currentYear + 10;
+    }
+    //--------------------------------------------------  
+    private static final Pattern PHONE_PATTERN = Pattern.compile("^\\d{3}\\.\\d{3}\\.\\d{4}$");
+
+    public static boolean checkIfValidPhoneNumber(String phoneNumber) {
+        if (phoneNumber == null) {
+            return false;
+        }
+        return PHONE_PATTERN.matcher(phoneNumber).matches();
     }
 }
