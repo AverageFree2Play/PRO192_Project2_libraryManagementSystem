@@ -2,9 +2,7 @@ package Utilities;
 
 import java.time.Year;
 import java.util.regex.Pattern;
-/**
- * @author SwordLake
- */
+
 public final class DataValidation {
      //------------------------------------------------------
      public static boolean checkNumberInMinMax(int number,int min, int max){

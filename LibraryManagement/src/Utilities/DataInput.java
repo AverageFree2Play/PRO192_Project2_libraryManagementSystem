@@ -3,9 +3,7 @@ package Utilities;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
-/**
- * @author SwordLake
- */
+
 public class DataInput {
     //-------------------------------------------------
     public static int getIntegerNumber(String displayMessage) 
