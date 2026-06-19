@@ -102,5 +102,13 @@ public class BookManagement {
         bookList.sort(Comparator.comparing(Book::getBookID).reversed());
         return bookList;
     }
-
+    
+    public boolean removeBook(String id){
+        Book book = findBookByID(id);
+        if(book == null){
+            return false;
+        }
+        bookList.remove(book);
+        return true;
+    }
 }
