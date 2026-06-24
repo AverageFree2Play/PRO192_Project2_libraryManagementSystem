@@ -103,7 +103,7 @@ public class BookManagement {
         }
         try{
             filemanager.saveDataToFile(strb.toString());
-            System.out.println("Book saved!");
+            System.out.println("Book list saved!");
         }catch (IOException e){
             System.out.println("Fail to save: "+e.getMessage());
         }
