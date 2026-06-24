@@ -4,19 +4,23 @@ import Entites.Book;
 
 import Utilities.DataInput;
 import Utilities.Constants;
-
+import Utilities.Menu;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Scanner;
+import DataObjects.FileManager;
+import java.io.IOException;
+import java.util.List;
 
 public class BookManagement {
 
-    private ArrayList<Book> bookList = new ArrayList();
+    private ArrayList<Book> bookList = new ArrayList<>();
     private Constants con = new Constants();
-
+    private FileManager filemanager = new FileManager("books.txt");
     public void bookMenu() {
         Scanner sc = new Scanner(System.in);        
-
+        BookManagement bookManagement = new BookManagement();
+        loadFromFile();
         int choice;
         int yesnochoice;
         System.out.println("You have enter Manage Books session!\n");
@@ -42,6 +46,7 @@ public class BookManagement {
                     }
                     else{
                         removeBook(id);
+                        saveToFile();
                     }
                     break;
                 case 4:
@@ -77,13 +82,49 @@ public class BookManagement {
                 return;
             }
             bookList.add(newBook);
+            saveToFile();
             System.out.println("Book added successfully!");
             System.out.println(newBook.getTitle() + " has been added!" + "\n");
         } catch (Exception e) {
             System.out.println("Failed to add: " + e.getMessage() + "\n");
         }
     }
-
+    
+    public void saveToFile(){
+        StringBuilder strb = new StringBuilder();
+        for (Book b : bookList){
+            strb.append(b.getBookID()).append("|");
+            strb.append(b.getTitle()).append("|");
+            strb.append(b.getAuthor()).append("|");
+            strb.append(b.getGenre()).append("|");
+            strb.append(b.getPubYear()).append("|");
+            strb.append(b.getQuantity()).append("|");
+            strb.append(System.lineSeparator());
+        }
+        try{
+            filemanager.saveDataToFile(strb.toString());
+            System.out.println("Book saved!");
+        }catch (IOException e){
+            System.out.println("Fail to save: "+e.getMessage());
+        }
+    }
+    public void loadFromFile(){
+        try{
+            List<String> lines = filemanager.readDataFromFile();
+            for (String line : lines){
+                try{
+                    String[] parts = line.split("\\|");
+                    Book b = new Book(parts[0],parts[1],parts[2],parts[3],Integer.parseInt(parts[4]), Integer.parseInt(parts[5]));
+                    bookList.add(b);
+                }catch(Exception e){
+                    System.out.println("Corrupted data in: "+e.getMessage());
+                }
+            }
+        }catch(IOException e){
+            System.out.println("No data found!");
+        }    
+    
+}
     public void viewBookList() {
         if(bookList.isEmpty()){
             System.out.println("No books in the list.\n");
@@ -112,15 +153,15 @@ public class BookManagement {
         return bookList;
     }
     
-    public boolean removeBook(String id){
+    public void removeBook(String id){
         Book book = findBookByID(id);
         
         if(book == null){
-            return false;
+            System.out.println("Book not found.");
+            return;
         }
         bookList.remove(book);
         System.out.println("Book removed!");
-        return true;
     }
 
     
