@@ -7,7 +7,7 @@ public class Book {
     private int Quantity,PubYear;
     // CONSTRUCTORS
     public Book(String part, String part1, String part2, String part3, int parseInt) {
-        ID = "B01";
+        ID = "";
         Title = "";
         Author = "";
         Genre = "";
