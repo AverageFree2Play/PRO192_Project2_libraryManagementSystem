@@ -11,13 +11,13 @@ import ManagementObject.MemberManagement;
 import ManagementObject.Reporting;
 import Utilities.Constants;
 import Utilities.DataInput;
-import java.util.Scanner;
+
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] a4rgs) {
         // CLASSES
-        Scanner sc = new Scanner(System.in);
+        
         BookManagement bookMgmt = new BookManagement();
         Constants con = new Constants();
      
@@ -37,7 +37,7 @@ public class Main {
                 System.out.println("1.Manage Books\n2.Manage Members\n3.Borrowing/Returning\n4.Reports\n5.Exit");
                 System.out.println(con.Seperator);
                 System.out.println("Choose an option: ");
-                // choice = sc.nextInt();
+                
                 choice = DataInput.getIntegerNumber();
 
                 switch (choice) {
@@ -64,7 +64,7 @@ public class Main {
         } catch (Exception ex){
             System.out.println(ex.getMessage());
         }
-        sc.close();
+        
     }
 
 }

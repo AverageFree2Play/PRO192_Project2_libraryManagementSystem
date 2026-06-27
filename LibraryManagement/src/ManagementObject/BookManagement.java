@@ -7,7 +7,6 @@ import Utilities.Constants;
 import Utilities.Menu;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Scanner;
 import DataObjects.FileManager;
 import java.io.IOException;
 import java.util.List;
@@ -18,18 +17,19 @@ public class BookManagement {
     private Constants con = new Constants();
     private FileManager filemanager = new FileManager("books.txt");
     public void bookMenu() {
-        Scanner sc = new Scanner(System.in);        
+              
         BookManagement bookManagement = new BookManagement();
         loadFromFile();
         int choice;
-        int yesnochoice;
+        
         System.out.println("You have enter Manage Books session!\n");
+        try{
         do {
             System.out.println(con.Seperator + "BOOK MANAGE MENU" + con.Seperator);
             System.out.println("1. Add book\n2. Update book\n3. Remove book\n4. View all books\n5. Search books\n6. Back\n");
             System.out.println("Choose an option(1-6): ");
 
-            choice = sc.nextInt();
+            choice = DataInput.getIntegerNumber();
             switch (choice) {
                 case 1:
                     addBook();
@@ -38,17 +38,9 @@ public class BookManagement {
                     System.out.println("You chose Update book!");
                     break;
                 case 3:
-                    String id = DataInput.getString("Enter the book's ID to remove: ");
-                    System.out.println("Do you really want to remove this book?(1/0): ");
-                    yesnochoice = sc.nextInt();
-                    if(yesnochoice == 0){
-                        break;
-                    }
-                    else{
-                        removeBook(id);
-                        saveToFile();
-                    }
+                    removeBook();
                     break;
+                    
                 case 4:
                     System.out.println("Books list: ");
                     viewBookList();
@@ -62,6 +54,9 @@ public class BookManagement {
                     System.out.println("Invalid choice. Please try again!\n\n");
             }
         } while (choice != 6);
+    }catch (Exception ex){
+            System.out.println(ex.getMessage());
+    }
     }
 
     public Book inputBook() throws Exception {
@@ -153,15 +148,22 @@ public class BookManagement {
         return bookList;
     }
     
-    public void removeBook(String id){
-        Book book = findBookByID(id);
+    public void removeBook(){
+        String id = DataInput.getString("Enter book's ID to remove: ");
+        Book toRemove = findBookByID(id);
         
-        if(book == null){
+        if(toRemove == null){
             System.out.println("Book not found.");
             return;
         }
-        bookList.remove(book);
-        System.out.println("Book removed!");
+        System.out.println("Found: " + toRemove); 
+        String confirm = DataInput.getString("Do you really want to delete this book? (y/n): ");
+        if(confirm.equalsIgnoreCase("y")){bookList.remove(toRemove);
+        System.out.println("Book removed!");}
+        else{
+            System.out.println("Remove cancelled!");
+        }
+        
     }
 
     

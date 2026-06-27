@@ -6,14 +6,7 @@ public class Book {
     private String ID,Title,Author,Genre;
     private int Quantity,PubYear;
     // CONSTRUCTORS
-    public Book(String part, String part1, String part2, String part3, int parseInt) {
-        ID = "";
-        Title = "";
-        Author = "";
-        Genre = "";
-        PubYear = 1900;
-        Quantity = 1;
-    }
+    
 
     public Book(String ID, String Title, String Author, String Genre, int PubYear, int Quantity) throws Exception {
         setID(ID);
@@ -27,13 +20,16 @@ public class Book {
     // METHODS
     public String getBookID(){return ID;}
     public void setID(String ID) throws Exception{
-        if(!DataValidation.checkStringWithFormat(ID.toUpperCase(),"B\\d{2}")){
-            throw new Exception("Invalid ID. Format: Bxx. Got:" + ID);
+        if(!DataValidation.checkStringWithFormat(ID.toUpperCase(),"B\\d{3}")){
+            throw new Exception("Invalid ID. Format: Bxxx. Got:" + ID);
         }        
         this.ID = ID;
     }
 
-    public String getTitle(){return Title;}
+    public String getTitle(){
+        return Title;
+    }
+    
     public void setTitle(String Title) {
         this.Title = Title;
     }
