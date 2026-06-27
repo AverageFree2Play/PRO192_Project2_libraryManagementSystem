@@ -159,7 +159,8 @@ public class BookManagement {
         System.out.println("Found: " + toRemove); 
         String confirm = DataInput.getString("Do you really want to delete this book? (y/n): ");
         if(confirm.equalsIgnoreCase("y")){bookList.remove(toRemove);
-        System.out.println("Book removed!");}
+        System.out.println("Book removed!");
+        saveToFile();}
         else{
             System.out.println("Remove cancelled!");
         }
