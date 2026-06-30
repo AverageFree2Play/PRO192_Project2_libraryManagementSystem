@@ -1,9 +1,13 @@
 package Entites;
 
 public abstract class Entity {
-    protected String id; // Every book and member needs a unique ID
+    private String id;
 
-    public String getId() { return id; }
+    public Entity(String id) {
+        this.id = id;
+    }
+    
+    public String getId() { return this.id; }
     public void setId(String id) throws Exception{ 
         this.id = id; 
     }

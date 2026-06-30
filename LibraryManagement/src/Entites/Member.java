@@ -15,6 +15,8 @@ public class Member extends Entity{
     }
     // CONSTRUCTOR
     public Member(String ID, String Name, String Phone, String Email,boolean IsPremium) throws Exception{
+        super(ID);
+        
         setId(ID);
         setName(Name);
         setPhone(Phone);

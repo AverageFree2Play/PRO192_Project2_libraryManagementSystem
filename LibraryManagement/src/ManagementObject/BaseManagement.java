@@ -1,11 +1,9 @@
-import DataObjects.FileManager;
+package ManagementObject;
+import java.util.ArrayList;
 
-public abstract class BaseManagement {
-    // Common methods or properties all managers might use
-    protected FileManager fileManager = new FileManager();
-
-    public abstract void init();
-    public abstract void add();
-    public abstract void update();
-    public abstract void displayAll();
+public interface BaseManagement<T> {
+    void add();
+    void update();
+    void delete();
+    ArrayList<T> get(); 
 }
