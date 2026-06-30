@@ -5,14 +5,6 @@ import Utilities.DataValidation;
 public class Member extends Entity{
     private String id,Name,Phone,Email;
     private boolean IsPremium;
-
-    public void Member(){
-        id = "";
-        Name = "N/A";
-        Phone = "000.000.0000";
-        Email = "N/A";
-        IsPremium = false;
-    }
     // CONSTRUCTOR
     public Member(String ID, String Name, String Phone, String Email,boolean IsPremium) throws Exception{
         super(ID);

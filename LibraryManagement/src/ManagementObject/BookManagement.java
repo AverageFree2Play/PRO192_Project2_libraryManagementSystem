@@ -19,7 +19,7 @@ public class BookManagement implements BaseManagement{
     
     /* Initializer*/
     public void bookMenu() {
-        BookManagement bookManagement = new BookManagement();
+        
         loadFromFile();
         int choice;
         
@@ -165,6 +165,7 @@ public class BookManagement implements BaseManagement{
         }
     }
     public void loadFromFile(){
+        bookList.clear();
         try{
             List<String> lines = filemanager.readDataFromFile();
             for (String line : lines){

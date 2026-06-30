@@ -1,13 +1,17 @@
 package ManagementObject;
 import ManagementObject.BorrowManagement;
+import Entites.Book;
+import Entites.BorrowRecord;
 import Utilities.DataInput;
 import Utilities.Constants;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
 public class Reporting {
     private Constants con = new Constants();
     public void reportMenu(){
         
         int choice;
-        System.out.println("You have enter Reporting page!");
         try{
         do{
             System.out.println(con.separator+"REPORTING"+con.separator);
@@ -15,7 +19,7 @@ public class Reporting {
             choice=DataInput.getIntegerNumber();
             switch(choice){
                 case 1:
-                    System.out.println("You chose print currently borrowed books!");break;
+                    currentBorrow();break;
                 case 2:
                     System.out.println("You chose print overdue books!");break;
                 case 3:
@@ -31,5 +35,38 @@ public class Reporting {
         }catch(Exception e){
             System.out.println(e.getMessage());
         }
+    }
+    public void currentBorrow(){
+        BookManagement bookMgmt = new BookManagement();
+        bookMgmt.loadFromFile();
+        
+        BorrowManagement brrwMgmt = new BorrowManagement();
+        ArrayList<BorrowRecord> records = brrwMgmt.get();
+        
+        // Count active borrows, sorted by ID
+        Map<String, Integer> borrowedQtyByBookId = new TreeMap<>();
+        for (BorrowRecord record : records) {
+            if (!record.isReturned()) {
+                String bookId = record.getBookId().toUpperCase();
+                borrowedQtyByBookId.merge(bookId, 1, Integer::sum);
+            }
+        }
+ 
+        if (borrowedQtyByBookId.isEmpty()) {
+            System.out.println("No books are currently borrowed.\n");
+            return;
+        }
+        System.out.println(con.longSeparator);
+        System.out.format("%-5s | %-30s | %s%n", "ID", "Title", "Borrowed Qty");
+        System.out.println(con.longSeparator);
+        
+        for (Map.Entry<String, Integer>entry:borrowedQtyByBookId.entrySet()){
+            String bookId = entry.getKey();
+            int qty = entry.getValue();
+            Book book = bookMgmt.findBookByID(bookId);
+            String title = (book != null)? book.getTitle():"(Unknown title)";
+            System.out.printf("%-5s | %-30s | %d%n", bookId, title, qty);
+        }
+        System.out.println(con.longSeparator+"\n");
     }
 }
