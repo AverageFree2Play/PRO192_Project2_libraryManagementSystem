@@ -36,6 +36,7 @@ public class BookManagement {
                     break;
                 case 2:
                     System.out.println("You chose Update book!");
+                    updateBook();
                     break;
                 case 3:
                     removeBook();
@@ -47,6 +48,7 @@ public class BookManagement {
                     break;
                 case 5:
                     System.out.println("You chose Search books!");
+                    searchBook();
                     break;
                 case 6:
                     break;
@@ -166,6 +168,66 @@ public class BookManagement {
         }
         
     }
+
+    public void updateBook() {
+        String id = DataInput.getString("Enter book's ID to update: ");
+        Book toUpdate = findBookByID(id);
+        
+        if (toUpdate == null) {
+            System.out.println("Book not found.");
+            return;
+        }
+        
+        System.out.println("Found book: " + toUpdate);
+        System.out.println("Enter new information (Press Enter to keep current data):");
+        
+        try {
+            // Cập nhật Title
+            String newTitle = DataInput.getString("Enter new title: ");
+            if (!newTitle.trim().isEmpty()) toUpdate.setTitle(newTitle);
+            
+            // Cập nhật Author
+            String newAuthor = DataInput.getString("Enter new author: ");
+            if (!newAuthor.trim().isEmpty()) toUpdate.setAuthor(newAuthor);
+            
+            // Cập nhật Genre
+            String newGenre = DataInput.getString("Enter new genre: ");
+            if (!newGenre.trim().isEmpty()) toUpdate.setGenre(newGenre);
+            
+            saveToFile();
+            System.out.println("Book updated successfully!");
+            
+        } catch (Exception e) {
+            System.out.println("Failed to update: " + e.getMessage());
+        }
+    }
+
+    public void searchBook() {
+        if(bookList.isEmpty()){
+            System.out.println("No books in the list.\n");
+            return;
+        }
+        
+        String keyword = DataInput.getString("Enter Book Title to search: ").toLowerCase();
+        boolean found = false;
+        
+        System.out.println(con.LongSeperator);
+        System.out.format("%-5s | %-30s | %-20s | %-15s | %4s | %s%n", "ID", "Title", "Author", "Genre", "Year", "Amount");
+        System.out.println(con.LongSeperator);
+        
+        for (Book b : bookList) {
+            if (b.getTitle().toLowerCase().contains(keyword)) {
+                System.out.println(b);
+                found = true;
+            }
+        }
+        
+        if (!found) {
+            System.out.println("No books match your search.");
+        }
+        System.out.println(con.LongSeperator);
+    }
+
 
     
 }
