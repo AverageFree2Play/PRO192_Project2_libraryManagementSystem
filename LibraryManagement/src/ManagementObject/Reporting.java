@@ -1,4 +1,5 @@
 package ManagementObject;
+import ManagementObject.BorrowManagement;
 import Utilities.DataInput;
 import Utilities.Constants;
 public class Reporting {
