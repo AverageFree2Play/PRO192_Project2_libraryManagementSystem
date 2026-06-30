@@ -74,8 +74,8 @@ public class BookManagement {
     public void addBook() {
         try {
             Book newBook = inputBook();
-            if (findBookByID(newBook.getBookID()) != null) {
-                System.out.println("ID " + newBook.getBookID() + " is already existed!");
+            if (findBookByID(newBook.getId()) != null) {
+                System.out.println("ID " + newBook.getId() + " is already existed!");
                 return;
             }
             bookList.add(newBook);
@@ -90,7 +90,7 @@ public class BookManagement {
     public void saveToFile(){
         StringBuilder strb = new StringBuilder();
         for (Book b : bookList){
-            strb.append(b.getBookID()).append("|");
+            strb.append(b.getId()).append("|");
             strb.append(b.getTitle()).append("|");
             strb.append(b.getAuthor()).append("|");
             strb.append(b.getGenre()).append("|");
@@ -138,7 +138,7 @@ public class BookManagement {
 
     public Book findBookByID(String id) {
         for (Book bk : bookList) {
-            if (bk.getBookID().equalsIgnoreCase(id)) {
+            if (bk.getId().equalsIgnoreCase(id)) {
                 return bk;
             }
         }
@@ -146,7 +146,7 @@ public class BookManagement {
     }
 
     public ArrayList<Book> getBookList() {
-        bookList.sort(Comparator.comparing(Book::getBookID).reversed());
+        bookList.sort(Comparator.comparing(Book::getId).reversed());
         return bookList;
     }
     

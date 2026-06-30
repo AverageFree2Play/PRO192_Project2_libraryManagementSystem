@@ -2,7 +2,7 @@ package Entites;
 
 import Utilities.DataValidation;
 
-public class Member {
+public class Member extends Entity{
     private String ID,Name,Phone,Email;
     private boolean IsPremium;
 
@@ -14,16 +14,18 @@ public class Member {
         IsPremium = false;
     }
     // CONSTRUCTOR
-    public Member(String ID, String Name, String Phone, String Email,boolean IsPremium) {
-        this.ID = ID;
-        this.Name = Name;
-        this.Phone = Phone;
-        this.Email = Email;
+    public Member(String ID, String Name, String Phone, String Email,boolean IsPremium) throws Exception{
+        setId(ID);
+        setName(Name);
+        setPhone(Phone);
+        setEmail(Email);
+        
         this.IsPremium = IsPremium;
     }
     // METHODS
-    public String getMemberID(){return ID;}
-    public void setID(String ID) throws Exception {
+    
+    @Override
+    public void setId(String ID) throws Exception {
         if(!DataValidation.checkStringWithFormat(ID.toUpperCase(),"M\\d{3}")){
             throw new Exception("Invalid ID. Format: Mxxx. Got:" + ID);
         }        

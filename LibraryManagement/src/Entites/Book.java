@@ -2,13 +2,13 @@ package Entites;
 
 import Utilities.DataValidation;
 
-public class Book {
+public class Book extends Entity {
     private String ID, Title, Author, Genre;
     private int Quantity, PubYear;
     
     // CONSTRUCTORS
     public Book(String ID, String Title, String Author, String Genre, int PubYear, int Quantity) throws Exception {
-        setID(ID);
+        setId(ID);
         setTitle(Title);
         setAuthor(Author);
         setGenre(Genre);
@@ -17,11 +17,9 @@ public class Book {
     }
     
     // METHODS
-    public String getBookID() {
-        return ID;
-    }
     
-    public void setID(String ID) throws Exception {
+    @Override
+    public void setId(String ID) throws Exception {
         if (!DataValidation.checkStringWithFormat(ID.toUpperCase(), "B\\d{3}")) {
             throw new Exception("Invalid ID. Format: Bxxx. Got:" + ID);
         }        
