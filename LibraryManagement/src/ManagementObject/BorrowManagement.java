@@ -1,4 +1,5 @@
 package ManagementObject;
+
 /**
  *
  * @author Trung Kien
@@ -29,7 +30,7 @@ public class BorrowManagement implements BaseManagement<BorrowRecord> {
         System.out.println("You have entered Manage Borrow/Return session!\n");
         
         do {
-            System.out.println(Constants.SEPARATOR + " BORROW/RETURN MENU " + Constants.SEPARATOR);
+            System.out.println(Constants.Seperator + " BORROW/RETURN MENU " + Constants.Seperator);
             System.out.println("1. Borrow book (Add)");
             System.out.println("2. Return book");
             System.out.println("3. Return overdue book");
@@ -42,12 +43,12 @@ public class BorrowManagement implements BaseManagement<BorrowRecord> {
                 choice = DataInput.getIntegerNumber("Choose an option(1-7): ");
                 
                 switch(choice) {
-                    case 1: add(); break;                 // Fulfills interface requirement
+                    case 1: add(); break;
                     case 2: returnBook(); break;
                     case 3: returnOverdueBook(); break;
-                    case 4: update(); break;              // Fulfills interface requirement
-                    case 5: delete(); break;              // Fulfills interface requirement
-                    case 6: viewRecords(); break;         // Uses get()
+                    case 4: update(); break; 
+                    case 5: delete(); break; 
+                    case 6: viewRecords(); break;
                     case 7: System.out.println("Exiting Borrow/Return menu...\n"); break;
                     default: System.out.println("Invalid choice. Please choose a number between 1 and 7!\n");
                 }
@@ -85,6 +86,7 @@ public class BorrowManagement implements BaseManagement<BorrowRecord> {
         String memberId = DataInput.getString("Enter Member ID of the record: ").toUpperCase();
         
         BorrowRecord recordToEdit = null;
+        
         for (BorrowRecord record : borrowList) {
             if (record.getBookId().equals(bookId) && record.getMemberId().equals(memberId) && !record.isReturned()) {
                 recordToEdit = record;
@@ -99,15 +101,11 @@ public class BorrowManagement implements BaseManagement<BorrowRecord> {
         
         System.out.println("Record found! Current Due Date: " + recordToEdit.getDueDate());
         String extendStr = DataInput.getString("Do you want to extend the due date by 7 days? (y/n): ");
+        
         if (extendStr.equalsIgnoreCase("y")) {
-            // Add a setDueDate() method to BorrowRecord if it throws an error here!
             LocalDate newDate = recordToEdit.getDueDate().plusDays(7);
-            
-            // Temporary workaround if setDueDate doesn't exist yet:  
-            // ADD public void setDueDate(LocalDate date) { this.dueDate = date; } to BorrowRecord.java!
-            System.out.println("*** Developer Note: Add setDueDate() to BorrowRecord.java to make this work! ***");
-            System.out.println("Extension simulated! (New Due Date would be: " + newDate + ")\n");
-            // recordToEdit.setDueDate(newDate); 
+            recordToEdit.setDueDate(newDate);
+            System.out.println("Due date extended! New Due Date: " + newDate + "\n");
             saveToFile();
         } else {
             System.out.println("Update cancelled.\n");
@@ -229,14 +227,14 @@ public class BorrowManagement implements BaseManagement<BorrowRecord> {
             System.out.println("No records found.\n");
             return;
         }
-        System.out.println(Constants.LONG_SEPARATOR);
+        System.out.println(Constants.LongSeperator);
         System.out.format("%-10s | %-10s | %-12s | %-12s | %-10s%n", "Book ID", "Member ID", "Borrow Date", "Due Date", "Status");
-        System.out.println(Constants.LONG_SEPARATOR);
+        System.out.println(Constants.LongSeperator);
         for (BorrowRecord r : borrowList) {
             System.out.format("%-10s | %-10s | %-12s | %-12s | %-10s%n", 
                 r.getBookId(), r.getMemberId(), r.getBorrowDate(), r.getDueDate(), (r.isReturned() ? "Returned" : "Active"));
         }
-        System.out.println(Constants.LONG_SEPARATOR + "\n");
+        System.out.println(Constants.LongSeperator + "\n");
     }
 
     // FILE I/O METHODS
@@ -270,6 +268,7 @@ public class BorrowManagement implements BaseManagement<BorrowRecord> {
                 }
             }
         } catch (IOException e) {
+            // Normal behavior on first run
         } catch (Exception e) {
             System.out.println("Corrupted data found in borrows.txt: " + e.getMessage());
         }

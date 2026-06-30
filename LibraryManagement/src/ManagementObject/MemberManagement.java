@@ -1,15 +1,19 @@
 package ManagementObject;
 import java.util.Scanner;
+import Utilities.Constants;
+import Utilities.DataInput;
 public class MemberManagement {
+    private Constants con = new Constants();
     public void memMenu(){
-        Scanner sc = new Scanner(System.in);
+        
         int choice;
+        
         System.out.println("You have enter Member Management session!");
-        do{
-            System.out.println("=====MEMBER=====");
+        try{do{
+            System.out.println(con.Seperator+"MEMBER" + con.Seperator);
             System.out.println("1. Add member\n2. Edit member\n3. Remove member\n4. Back");
             System.out.println("Choose an option: ");
-            choice = sc.nextInt();
+            choice = DataInput.getIntegerNumber();
             switch(choice){
                 case 1:
                     System.out.println("You chose Add member!"); break;
@@ -23,6 +27,9 @@ public class MemberManagement {
                     System.out.println("Invalid choice. Please try again!\n\n");
             }
             
-        }while(choice!=4);
+        }while(choice!=4);}
+        catch(Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 }

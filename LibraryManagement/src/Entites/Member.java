@@ -6,7 +6,7 @@ public class Member extends Entity{
     private String id,Name,Phone,Email;
     private boolean IsPremium;
 
-    public Member() {
+    public void Member(){
         id = "";
         Name = "N/A";
         Phone = "000.000.0000";
