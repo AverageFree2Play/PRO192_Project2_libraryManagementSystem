@@ -30,33 +30,34 @@ public class Book {
         return Title;
     }
     
-    public void setTitle(String Title) {
+        public void setTitle(String Title) throws Exception {
+        if (Title == null || Title.trim().isEmpty()) {
+            throw new Exception("Title cannot be empty!");
+        }
         this.Title = Title;
     }
 
-    public String getAuthor(){return Author;}
-    public void setAuthor(String Author){
+    public void setAuthor(String Author) throws Exception {
+        if (Author == null || Author.trim().isEmpty()) {
+            throw new Exception("Author cannot be empty!");
+        }
         this.Author = Author;
     }
 
-    public String getGenre(){return Genre;}
-    public void setGenre(String Genre){
+    public void setGenre(String Genre) throws Exception {
+        if (Genre == null || Genre.trim().isEmpty()) {
+            throw new Exception("Genre cannot be empty!");
+        }
         this.Genre = Genre;
     }
 
-    public int getPubYear(){return PubYear;}
-    public void setPubYear(int PubYear) throws Exception{
-        if(!DataValidation.checkIfValidYear(PubYear)){
-            throw new Exception("Invalid year. Got:" + PubYear);
+    public void setQuantity(int Quantity) throws Exception {
+        if (Quantity < 0) {
+            throw new Exception("Quantity cannot be a negative number!");
         }
-        
-        this.PubYear = PubYear;
-    }
-
-    public int getQuantity(){return Quantity;}
-    public void setQuantity(int Quantity) {
         this.Quantity = Quantity;
-    }    
+    } 
+    
 
     @Override
     public String toString() {
