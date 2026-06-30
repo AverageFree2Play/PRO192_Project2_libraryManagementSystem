@@ -24,15 +24,15 @@ public class Main {
         boolean run = true;
         int choice = 0;
         
-        System.out.println(con.Seperator + "\n");
+        System.out.println(con.separator + "\n");
         
         do {
             try { 
                 System.out.println("LIBRARY MANAGEMENT SYSTEM");
-                System.out.println(con.Seperator);
+                System.out.println(con.separator);
                 System.out.println("Welcome back!");
                 System.out.println("1. Manage Books\n2. Manage Members\n3. Borrowing/Returning\n4. Reports\n5. Exit");
-                System.out.println(con.Seperator);
+                System.out.println(con.separator);
                 
                 choice = DataInput.getIntegerNumber("Choose an option: ");
 

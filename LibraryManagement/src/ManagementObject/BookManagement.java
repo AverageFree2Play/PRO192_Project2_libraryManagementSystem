@@ -26,7 +26,7 @@ public class BookManagement implements BaseManagement{
         System.out.println("You have enter Manage Books session!\n");
         try{
         do {
-            System.out.println(con.Seperator + "BOOK MANAGE MENU" + con.Seperator);
+            System.out.println(con.separator + "BOOK MANAGE MENU" + con.separator);
             System.out.println("1. Add book\n2. Update book\n3. Remove book\n4. View all books\n5. Search books\n6. Back\n");
             System.out.println("Choose an option(1-6): ");
 
@@ -197,13 +197,13 @@ public class BookManagement implements BaseManagement{
             System.out.println("No books in the list.\n");
             return;
         }
-        System.out.println(con.LongSeperator);
+        System.out.println(con.longSeparator);
         System.out.format("%-5s | %-30s | %-20s | %-15s | %4s | %s%n", "ID", "Title", "Author", "Genre", "Year", "Amount");
-        System.out.println(con.LongSeperator);
+        System.out.println(con.longSeparator);
         for (Book book : bookList) {
             System.out.println(book);
         }
-        System.out.println(con.LongSeperator);
+        System.out.println(con.longSeparator);
     }
 
     public Book findBookByID(String id) {
@@ -224,9 +224,9 @@ public class BookManagement implements BaseManagement{
         String keyword = DataInput.getString("Enter Book Title to search: ").toLowerCase();
         boolean found = false;
         
-        System.out.println(con.LongSeperator);
+        System.out.println(con.longSeparator);
         System.out.format("%-5s | %-30s | %-20s | %-15s | %4s | %s%n", "ID", "Title", "Author", "Genre", "Year", "Amount");
-        System.out.println(con.LongSeperator);
+        System.out.println(con.longSeparator);
         
         for (Book b : bookList) {
             if (b.getTitle().toLowerCase().contains(keyword)) {
@@ -238,7 +238,7 @@ public class BookManagement implements BaseManagement{
         if (!found) {
             System.out.println("No books match your search.");
         }
-        System.out.println(con.LongSeperator);
+        System.out.println(con.longSeparator);
     }
 
 
