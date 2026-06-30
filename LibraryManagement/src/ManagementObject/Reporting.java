@@ -9,7 +9,7 @@ public class Reporting {
         System.out.println("You have enter Reporting page!");
         try{
         do{
-            System.out.println(con.Seperator+"REPORTING"+con.Seperator);
+            System.out.println(con.separator+"REPORTING"+con.separator);
             System.out.println("1.Currently borrowed books\n2.Overdue books\n3.Most popular\n4.Most borrowings members\n5.Back");
             choice=DataInput.getIntegerNumber();
             switch(choice){

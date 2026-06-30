@@ -19,6 +19,7 @@ public class BorrowManagement implements BaseManagement<BorrowRecord> {
 
     private ArrayList<BorrowRecord> borrowList = new ArrayList<>();
     private FileManager fileManager = new FileManager("borrows.txt");
+    private Constants con = new Constants();
 
     // Constructor loads existing data
     public BorrowManagement() {
@@ -30,7 +31,7 @@ public class BorrowManagement implements BaseManagement<BorrowRecord> {
         System.out.println("You have entered Manage Borrow/Return session!\n");
         
         do {
-            System.out.println(Constants.Seperator + " BORROW/RETURN MENU " + Constants.Seperator);
+            System.out.println(con.separator + " BORROW/RETURN MENU " + con.separator);
             System.out.println("1. Borrow book (Add)");
             System.out.println("2. Return book");
             System.out.println("3. Return overdue book");
@@ -227,14 +228,14 @@ public class BorrowManagement implements BaseManagement<BorrowRecord> {
             System.out.println("No records found.\n");
             return;
         }
-        System.out.println(Constants.LongSeperator);
+        System.out.println(con.longSeparator);
         System.out.format("%-10s | %-10s | %-12s | %-12s | %-10s%n", "Book ID", "Member ID", "Borrow Date", "Due Date", "Status");
-        System.out.println(Constants.LongSeperator);
+        System.out.println(con.longSeparator);
         for (BorrowRecord r : borrowList) {
             System.out.format("%-10s | %-10s | %-12s | %-12s | %-10s%n", 
                 r.getBookId(), r.getMemberId(), r.getBorrowDate(), r.getDueDate(), (r.isReturned() ? "Returned" : "Active"));
         }
-        System.out.println(Constants.LongSeperator + "\n");
+        System.out.println(con.longSeparator + "\n");
     }
 
     // FILE I/O METHODS
