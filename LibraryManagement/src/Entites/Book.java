@@ -3,11 +3,10 @@ package Entites;
 import Utilities.DataValidation;
 
 public class Book {
-    private String ID,Title,Author,Genre;
-    private int Quantity,PubYear;
-    // CONSTRUCTORS
+    private String ID, Title, Author, Genre;
+    private int Quantity, PubYear;
     
-
+    // CONSTRUCTORS
     public Book(String ID, String Title, String Author, String Genre, int PubYear, int Quantity) throws Exception {
         setID(ID);
         setTitle(Title);
@@ -18,23 +17,30 @@ public class Book {
     }
     
     // METHODS
-    public String getBookID(){return ID;}
-    public void setID(String ID) throws Exception{
-        if(!DataValidation.checkStringWithFormat(ID.toUpperCase(),"B\\d{3}")){
+    public String getBookID() {
+        return ID;
+    }
+    
+    public void setID(String ID) throws Exception {
+        if (!DataValidation.checkStringWithFormat(ID.toUpperCase(), "B\\d{3}")) {
             throw new Exception("Invalid ID. Format: Bxxx. Got:" + ID);
         }        
         this.ID = ID;
     }
 
-    public String getTitle(){
+    public String getTitle() {
         return Title;
     }
     
-        public void setTitle(String Title) throws Exception {
+    public void setTitle(String Title) throws Exception {
         if (Title == null || Title.trim().isEmpty()) {
             throw new Exception("Title cannot be empty!");
         }
         this.Title = Title;
+    }
+
+    public String getAuthor() {
+        return Author;
     }
 
     public void setAuthor(String Author) throws Exception {
@@ -44,11 +50,30 @@ public class Book {
         this.Author = Author;
     }
 
+    public String getGenre() {
+        return Genre;
+    }
+
     public void setGenre(String Genre) throws Exception {
         if (Genre == null || Genre.trim().isEmpty()) {
             throw new Exception("Genre cannot be empty!");
         }
         this.Genre = Genre;
+    }
+
+    public int getPubYear() {
+        return PubYear;
+    }
+
+    public void setPubYear(int PubYear) throws Exception {
+        if (!DataValidation.checkIfValidYear(PubYear)) {
+            throw new Exception("Invalid year. Got:" + PubYear);
+        }
+        this.PubYear = PubYear;
+    }
+
+    public int getQuantity() {
+        return Quantity;
     }
 
     public void setQuantity(int Quantity) throws Exception {
@@ -57,12 +82,10 @@ public class Book {
         }
         this.Quantity = Quantity;
     } 
-    
 
     @Override
     public String toString() {
         return String.format("%-5s | %-30s | %-20s | %-15s | %4d | %d",
         ID, Title, Author, Genre, PubYear, Quantity);
     }
-    
 }
