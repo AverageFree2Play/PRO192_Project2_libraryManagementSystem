@@ -1,3 +1,0 @@
-B001|Dac Nhan Tam|Dale Carnegie|Self-help|1936|15
-B002|Nha Gia Kim|Paulo Coelho|Fiction|1988|5
-B003|Clean Code|Robert C. Martin|Programming|2008|10
