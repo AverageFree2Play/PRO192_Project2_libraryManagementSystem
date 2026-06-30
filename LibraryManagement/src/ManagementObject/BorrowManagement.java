@@ -1,19 +1,18 @@
 package ManagementObject;
 
 import java.util.Scanner;
-
+import Utilities.DataInput;
 public class BorrowManagement {
     public void borrowMenu(){
-        Scanner sc = new Scanner(System.in);
         
         int choice;
         System.out.println("You have enter Manage Borrow/Return session!\n");
-        do{
+        try{do{
             System.out.println("=====BORROW/RETURN MENU=====");
             System.out.println("1. Borrow book\n2. Return book\n3. Return overdue book\n4. Back\n");
             System.out.println("Choose an option(1-6): ");
       
-            choice = sc.nextInt();
+            choice = DataInput.getIntegerNumber();
             switch(choice){
                 case 1:
                     System.out.println("You chose Borrow book!"); break;
@@ -27,6 +26,9 @@ public class BorrowManagement {
                 default:
                     System.out.println("Invalid choice. Please try again!\n\n");
             }
-        }while(choice!=4);
+        }while(choice!=4);}
+        catch(Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 }
