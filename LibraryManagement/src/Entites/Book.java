@@ -3,7 +3,7 @@ package Entites;
 import Utilities.DataValidation;
 
 public class Book extends Entity {
-    private String ID, Title, Author, Genre;
+    private String id, Title, Author, Genre;
     private int Quantity, PubYear;
     
     // CONSTRUCTORS
@@ -23,7 +23,7 @@ public class Book extends Entity {
         if (!DataValidation.checkStringWithFormat(ID.toUpperCase(), "B\\d{3}")) {
             throw new Exception("Invalid ID. Format: Bxxx. Got:" + ID);
         }        
-        this.ID = ID;
+        this.id = ID;
     }
 
     public String getTitle() {
@@ -84,6 +84,6 @@ public class Book extends Entity {
     @Override
     public String toString() {
         return String.format("%-5s | %-30s | %-20s | %-15s | %4d | %d",
-        ID, Title, Author, Genre, PubYear, Quantity);
+        id, Title, Author, Genre, PubYear, Quantity);
     }
 }

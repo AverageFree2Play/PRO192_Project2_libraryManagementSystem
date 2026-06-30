@@ -3,11 +3,11 @@ package Entites;
 import Utilities.DataValidation;
 
 public class Member extends Entity{
-    private String ID,Name,Phone,Email;
+    private String id,Name,Phone,Email;
     private boolean IsPremium;
 
     public Member() {
-        ID = "";
+        id = "";
         Name = "N/A";
         Phone = "000.000.0000";
         Email = "N/A";
@@ -29,7 +29,7 @@ public class Member extends Entity{
         if(!DataValidation.checkStringWithFormat(ID.toUpperCase(),"M\\d{3}")){
             throw new Exception("Invalid ID. Format: Mxxx. Got:" + ID);
         }        
-        this.ID = ID;
+        this.id = ID;
     }
 
     public String getName(){return Name;}
