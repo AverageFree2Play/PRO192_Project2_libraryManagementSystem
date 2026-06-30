@@ -1,10 +1,8 @@
 package MainProgram;
-
 /**
  *
- * @author MSI-PC
+ * @author Trung Kien
  */
-import Utilities.Menu;
 import ManagementObject.BookManagement;
 import ManagementObject.BorrowManagement;
 import ManagementObject.MemberManagement;
@@ -12,33 +10,31 @@ import ManagementObject.Reporting;
 import Utilities.Constants;
 import Utilities.DataInput;
 
-
 public class Main {
 
-    public static void main(String[] a4rgs) {
+    public static void main(String[] args) {
         // CLASSES
-        
         BookManagement bookMgmt = new BookManagement();
-        Constants con = new Constants();
-     
         BorrowManagement brwMgmt = new BorrowManagement();
         MemberManagement mbMgmt = new MemberManagement();
         Reporting rp = new Reporting();
+        Constants con = new Constants();
+        
         // VARIABLES
         boolean run = true;
-        int choice;
+        int choice = 0;
         
-        System.out.println(con.Seperator+"\n");
-        try {
-            do {
+        System.out.println(con.Seperator + "\n");
+        
+        do {
+            try { 
                 System.out.println("LIBRARY MANAGEMENT SYSTEM");
                 System.out.println(con.Seperator);
                 System.out.println("Welcome back!");
-                System.out.println("1.Manage Books\n2.Manage Members\n3.Borrowing/Returning\n4.Reports\n5.Exit");
+                System.out.println("1. Manage Books\n2. Manage Members\n3. Borrowing/Returning\n4. Reports\n5. Exit");
                 System.out.println(con.Seperator);
-                System.out.println("Choose an option: ");
                 
-                choice = DataInput.getIntegerNumber();
+                choice = DataInput.getIntegerNumber("Choose an option: ");
 
                 switch (choice) {
                     case 1:
@@ -60,11 +56,9 @@ public class Main {
                     default:
                         System.out.println("Invalid choice. Please try again!\n\n");
                 }
-            } while (run);
-        } catch (Exception ex){
-            System.out.println(ex.getMessage());
-        }
-        
+            } catch (Exception ex) {
+                System.out.println("Error: " + ex.getMessage() + " Please enter a valid number.\n");
+            }
+        } while (run);
     }
-
 }
