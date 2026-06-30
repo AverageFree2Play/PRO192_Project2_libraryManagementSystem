@@ -29,6 +29,5 @@ public class FileManager{
         //        Charset.forName("utf-8"));
         Files.write(new File(fileName).toPath(), data.getBytes(StandardCharsets.UTF_8));
     }   
-    //-------------------------------------------------- 
-    //More the methods here 
+    
 }
