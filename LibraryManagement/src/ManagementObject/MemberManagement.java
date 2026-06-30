@@ -10,7 +10,7 @@ public class MemberManagement {
         
         System.out.println("You have enter Member Management session!");
         try{do{
-            System.out.println(con.Seperator+"MEMBER" + con.Seperator);
+            System.out.println(con.separator+"MEMBER" + con.separator);
             System.out.println("1. Add member\n2. Edit member\n3. Remove member\n4. Back");
             System.out.println("Choose an option: ");
             choice = DataInput.getIntegerNumber();
