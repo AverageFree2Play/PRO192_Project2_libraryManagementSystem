@@ -41,7 +41,7 @@ public class Main {
                         bookMgmt.bookMenu();
                         break;
                     case 2:
-                        mbMgmt.memMenu();
+                        mbMgmt.memberMenu();
                         break;
                     case 3:
                         brwMgmt.borrowMenu();

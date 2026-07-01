@@ -1,2 +1,4 @@
 B001|Two Thousand Leauges Under Sea|Jules Verne|Adventure|1872|6|
 B002|Mahou no Tabitabi|Jougi Shiraishi|Fantasy|2025|7|
+B002|Elaina 15|Jougi|Fantasy|2025|7|
+B001| The Great Gatsby|F. Scott Fitzgerald|Classic|1925|5|

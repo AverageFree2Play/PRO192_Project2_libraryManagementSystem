@@ -2,50 +2,123 @@ package Entites;
 
 import Utilities.DataValidation;
 
-public class Member extends Entity{
-    private String id,Name,Phone,Email;
-    private boolean IsPremium;
-    // CONSTRUCTOR
-    public Member(String ID, String Name, String Phone, String Email,boolean IsPremium) throws Exception{
-        super(ID);
-        
-        setId(ID);
-        setName(Name);
-        setPhone(Phone);
-        setEmail(Email);
-        
-        this.IsPremium = IsPremium;
+public class Member extends Entity {
+
+    private String name;
+    private String phone;
+    private String email;
+    private boolean isPremium;
+
+    /* ================= DEFAULT CONSTRUCTOR ================= */
+    public Member() {
+        super("");
+
+        this.name = "N/A";
+        this.phone = "0000000000";
+        this.email = "N/A";
+        this.isPremium = false;
     }
-    // METHODS
-    
+
+    /* ================= MAIN CONSTRUCTOR ================= */
+    public Member(String id,
+                  String name,
+                  String phone,
+                  String email,
+                  boolean isPremium) throws Exception {
+
+        super(id);
+
+        setId(id);
+        setName(name);
+        setPhone(phone);
+        setEmail(email);
+        setPremium(isPremium);
+    }
+
+    /* ================= ID (BR1 - UNIQUE, IMMUTABLE RULE) ================= */
     @Override
-    public void setId(String ID) throws Exception {
-        if(!DataValidation.checkStringWithFormat(ID.toUpperCase(),"M\\d{3}")){
-            throw new Exception("Invalid ID. Format: Mxxx. Got:" + ID);
-        }        
-        this.id = ID;
-    }
+    public void setId(String id) throws Exception {
 
-    public String getName(){return Name;}
-    public void setName(String Name){
-        this.Name = Name;
-    }
-
-    public String getPhone(){return Phone;}
-    public void setPhone(String Phone) throws Exception{
-        if(!DataValidation.checkIfValidPhoneNumber(Phone)){
-            throw new Exception("Invalid phone number. Format: xxx.xxx.xxxx. Got:" + Phone);
+        if (id == null) {
+            throw new Exception("ID cannot be null");
         }
-        this.Phone = Phone;
+
+        id = id.trim().toUpperCase();
+
+        if (!DataValidation.checkStringWithFormat(id, "M\\d{3}")) {
+            throw new Exception("Invalid Member ID format (Mxxx). Example: M001");
+        }
+
+        super.setId(id); // ✔ FIX: đúng encapsulation
     }
 
-    public String getEmail(){return Email;}
-    public void setEmail(String Email) throws Exception {
-        if(!DataValidation.checkStringWithFormat(Email,"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$")){
-            throw new Exception("Email is invalid.");
-        }
-        this.Email = Email;
+    @Override
+    public String getId() {
+        return super.getId();
     }
-    
-    
+
+    /* ================= NAME (BR2) ================= */
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) throws Exception {
+
+        if (!DataValidation.checkStringEmpty(name)) {
+            throw new Exception("Member name cannot be empty!");
+        }
+
+        this.name = name.trim();
+    }
+
+    /* ================= PHONE ================= */
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) throws Exception {
+
+        if (!DataValidation.checkIfValidPhoneNumber(phone)) {
+            throw new Exception("Invalid phone number (must be 10 digits).");
+        }
+
+        this.phone = phone.trim();
+    }
+
+    /* ================= EMAIL ================= */
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) throws Exception {
+
+        if (!DataValidation.checkIfValidEmail(email)) {
+            throw new Exception("Invalid email format.");
+        }
+
+        this.email = email.trim().toLowerCase();
+    }
+
+    /* ================= PREMIUM ================= */
+    public boolean isPremium() {
+        return isPremium;
+    }
+
+    public void setPremium(boolean isPremium) {
+        this.isPremium = isPremium;
+    }
+
+    /* ================= DISPLAY ================= */
+    @Override
+    public String toString() {
+
+        return String.format(
+                "%-5s | %-25s | %-15s | %-30s | %-10s",
+                getId(),
+                name,
+                phone,
+                email,
+                isPremium ? "Yes" : "No"
+        );
+    }
 }
