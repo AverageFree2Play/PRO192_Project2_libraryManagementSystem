@@ -25,17 +25,15 @@ public class BookManagement implements BaseManagement{
         
         System.out.println("You have enter Manage Books session!\n");
         try{
-<<<<<<< Updated upstream
-        do {
             System.out.println(con.separator + "BOOK MANAGE MENU" + con.separator);
             System.out.println("1. Add book\n2. Update book\n3. Remove book\n4. View all books\n5. Search books\n6. Back\n");
             System.out.println("Choose an option(1-6): ");
-=======
+
             do {
-                System.out.println(con.Seperator + "BOOK MANAGE MENU" + con.Seperator);
+                System.out.println(con.separator + "BOOK MANAGE MENU" + con.separator);
                 System.out.println("1. Add book\n2. Update book\n3. Remove book\n4. View all books\n5. Search books\n6. Back\n");
                 System.out.println("Choose an option(1-6): ");
->>>>>>> Stashed changes
+
 
                 choice = DataInput.getIntegerNumber();
                 switch (choice) {
