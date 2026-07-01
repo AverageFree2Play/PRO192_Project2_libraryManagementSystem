@@ -25,41 +25,42 @@ public class BookManagement implements BaseManagement{
         
         System.out.println("You have enter Manage Books session!\n");
         try{
+<<<<<<< Updated upstream
         do {
             System.out.println(con.separator + "BOOK MANAGE MENU" + con.separator);
             System.out.println("1. Add book\n2. Update book\n3. Remove book\n4. View all books\n5. Search books\n6. Back\n");
             System.out.println("Choose an option(1-6): ");
+=======
+            do {
+                System.out.println(con.Seperator + "BOOK MANAGE MENU" + con.Seperator);
+                System.out.println("1. Add book\n2. Update book\n3. Remove book\n4. View all books\n5. Search books\n6. Back\n");
+                System.out.println("Choose an option(1-6): ");
+>>>>>>> Stashed changes
 
-            choice = DataInput.getIntegerNumber();
-            switch (choice) {
-                case 1:
-                    add();
-                    break;
-                case 2:
-                    System.out.println("You chose Update book!");
-                    update();
-                    break;
-                case 3:
-                    delete();
-                    break;
-                    
-                case 4:
-                    System.out.println("Books list: ");
-                    viewBookList();
-                    break;
-                case 5:
-                    System.out.println("You chose Search books!");
-                    searchBook();
-                    break;
-                case 6:
-                    break;
-                default:    
-                    System.out.println("Invalid choice. Please try again!\n\n");
-            }
-        } while (choice != 6);
-    }catch (Exception ex){
-            System.out.println(ex.getMessage());
-    }
+                choice = DataInput.getIntegerNumber();
+                switch (choice) {
+                    case 1:
+                        add(); break;
+                    case 2:
+                        System.out.println("You chose Update book!");
+                        update(); break;
+                    case 3:
+                        delete(); break;
+                    case 4:
+                        System.out.println("Books list: ");
+                        viewBookList(); break;
+                    case 5:
+                        System.out.println("You chose Search books!");
+                        searchBook(); break;
+                    case 6:
+                        break;
+                    default:    
+                        System.out.println("Invalid choice. Please try again!\n\n");
+                }
+            } while (choice != 6);
+        }catch (Exception ex){
+                System.out.println(ex.getMessage());
+        }
     }
 
     /* CRUD */
