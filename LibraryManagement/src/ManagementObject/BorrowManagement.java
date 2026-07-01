@@ -1,5 +1,4 @@
 package ManagementObject;
-
 /**
  *
  * @author Trung Kien
@@ -11,6 +10,7 @@ import Utilities.DataInput;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter; // UPDATED
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +20,9 @@ public class BorrowManagement implements BaseManagement<BorrowRecord> {
     private ArrayList<BorrowRecord> borrowList = new ArrayList<>();
     private FileManager fileManager = new FileManager("borrows.txt");
     private Constants con = new Constants();
+    
+    // ADDED: The formatter used for printing and loading dates
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     // Constructor loads existing data
     public BorrowManagement() {
@@ -64,20 +67,26 @@ public class BorrowManagement implements BaseManagement<BorrowRecord> {
     @Override
     public void add() {
         System.out.println("\n--- Borrow a Book ---");
-        String bookId = DataInput.getString("Enter Book ID: ").toUpperCase();
-        String memberId = DataInput.getString("Enter Member ID: ").toUpperCase();
+        try {
+            // Ask for the new Record ID
+            String recordId = DataInput.getString("Enter Transaction ID (e.g., TR01): ").toUpperCase();
+            String bookId = DataInput.getString("Enter Book ID: ").toUpperCase();
+            String memberId = DataInput.getString("Enter Member ID: ").toUpperCase();
 
-        // 14-day borrow period
-        LocalDate borrowDate = LocalDate.now();
-        LocalDate dueDate = borrowDate.plusDays(14); 
+            LocalDate borrowDate = LocalDate.now();
+            LocalDate dueDate = borrowDate.plusDays(14); 
 
-        BorrowRecord record = new BorrowRecord(bookId, memberId, borrowDate, dueDate, false);
-        borrowList.add(record);
-        saveToFile();
+            // Pass recordId into the constructor
+            BorrowRecord record = new BorrowRecord(recordId, bookId, memberId, borrowDate, dueDate, false);
+            borrowList.add(record);
+            saveToFile();
 
-        System.out.println("Successfully borrowed!");
-        System.out.println("Borrow Date: " + borrowDate);
-        System.out.println("Due Date: " + dueDate + "\n");
+            System.out.println("Successfully borrowed!");
+            System.out.println("Borrow Date: " + borrowDate.format(DATE_FORMAT));
+            System.out.println("Due Date: " + dueDate.format(DATE_FORMAT) + "\n");
+        } catch (Exception e) {
+            System.out.println("Error creating record: " + e.getMessage());
+        }
     }
 
     @Override
@@ -100,13 +109,15 @@ public class BorrowManagement implements BaseManagement<BorrowRecord> {
             return;
         }
         
-        System.out.println("Record found! Current Due Date: " + recordToEdit.getDueDate());
+        // UPDATED: Formatted output
+        System.out.println("Record found! Current Due Date: " + recordToEdit.getDueDate().format(DATE_FORMAT));
         String extendStr = DataInput.getString("Do you want to extend the due date by 7 days? (y/n): ");
         
         if (extendStr.equalsIgnoreCase("y")) {
             LocalDate newDate = recordToEdit.getDueDate().plusDays(7);
             recordToEdit.setDueDate(newDate);
-            System.out.println("Due date extended! New Due Date: " + newDate + "\n");
+            // UPDATED: Formatted output
+            System.out.println("Due date extended! New Due Date: " + newDate.format(DATE_FORMAT) + "\n");
             saveToFile();
         } else {
             System.out.println("Update cancelled.\n");
@@ -228,12 +239,13 @@ public class BorrowManagement implements BaseManagement<BorrowRecord> {
             System.out.println("No records found.\n");
             return;
         }
-        System.out.println(con.longSeparator);
+        System.out.println(con.longSeparator); 
         System.out.format("%-10s | %-10s | %-12s | %-12s | %-10s%n", "Book ID", "Member ID", "Borrow Date", "Due Date", "Status");
         System.out.println(con.longSeparator);
         for (BorrowRecord r : borrowList) {
+            // UPDATED: Formatted output for the table
             System.out.format("%-10s | %-10s | %-12s | %-12s | %-10s%n", 
-                r.getBookId(), r.getMemberId(), r.getBorrowDate(), r.getDueDate(), (r.isReturned() ? "Returned" : "Active"));
+                r.getBookId(), r.getMemberId(), r.getBorrowDate().format(DATE_FORMAT), r.getDueDate().format(DATE_FORMAT), (r.isReturned() ? "Returned" : "Active"));
         }
         System.out.println(con.longSeparator + "\n");
     }
@@ -257,19 +269,20 @@ public class BorrowManagement implements BaseManagement<BorrowRecord> {
             for (String line : lines) {
                 if (line.trim().isEmpty()) continue;
                 String[] parts = line.split("\\|");
-                if (parts.length == 5) {
+                // Change from 5 to 6
+                if (parts.length == 6) {
                     BorrowRecord record = new BorrowRecord(
-                        parts[0], 
-                        parts[1], 
-                        LocalDate.parse(parts[2]), 
-                        LocalDate.parse(parts[3]), 
-                        Boolean.parseBoolean(parts[4])
+                        parts[0], // recordId
+                        parts[1], // bookId
+                        parts[2], // memberId
+                        LocalDate.parse(parts[3], DATE_FORMAT), 
+                        LocalDate.parse(parts[4], DATE_FORMAT), 
+                        Boolean.parseBoolean(parts[5])
                     );
                     borrowList.add(record);
                 }
             }
         } catch (IOException e) {
-            // Normal behavior on first run
         } catch (Exception e) {
             System.out.println("Corrupted data found in borrows.txt: " + e.getMessage());
         }
