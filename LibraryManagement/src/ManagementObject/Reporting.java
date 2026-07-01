@@ -9,6 +9,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.HashMap;
+import java.util.List;
 public class Reporting {
     private Constants con = new Constants();
     public void reportMenu(){
@@ -101,4 +103,33 @@ public class Reporting {
         }
         System.out.println("\n");
     }
+//  Most popular books
+    public void mostPopularBooks(){
+        BookManagement bookMgmt = new BookManagement();
+        bookMgmt.loadFromFile();
+        BorrowManagement brrwMgmt = new BorrowManagement();
+        ArrayList<BorrowRecord> records = brrwMgmt.get();
+        if(records.isEmpty()){
+            System.out.println("No borrow records found.\n");
+            return;
+        }
+        Map<String, Integer> countByBookId = new HashMap<>();
+        for (BorrowRecord r : records) {
+            countByBookId.merge(r.getBookId().toUpperCase(), 1, Integer::sum);
+        }
+        List<Map.Entry<String, Integer>> sorted = new ArrayList<>(countByBookId.entrySet());
+        sorted.sort((a, b) -> b.getValue() - a.getValue());
+        System.out.println(con.longSeparator);
+        System.out.format("%-4s | %-5s | %-30s | %s%n", "Rank", "ID", "Title", "Total Borrows");
+        System.out.println(con.longSeparator);
+        int rank = 1;
+        for (Map.Entry<String, Integer> entry : sorted) {
+            Book book = bookMgmt.findBookByID(entry.getKey());
+            String title = (book != null) ? book.getTitle() : "(Unknown title)";
+            System.out.format("%-4d | %-5s | %-30s | %d%n",
+                rank++, entry.getKey(), title, entry.getValue());
+        }
+        System.out.println("\n");
+        }
 }
+
