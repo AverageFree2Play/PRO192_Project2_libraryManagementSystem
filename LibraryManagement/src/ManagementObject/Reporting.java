@@ -4,6 +4,8 @@ import Entites.Book;
 import Entites.BorrowRecord;
 import Utilities.DataInput;
 import Utilities.Constants;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
@@ -21,7 +23,7 @@ public class Reporting {
                 case 1:
                     currentBorrow();break;
                 case 2:
-                    System.out.println("You chose print overdue books!");break;
+                    overdueBooks();break;
                 case 3:
                     System.out.println("You chose print most popular books!");break;
                 case 4:
@@ -36,6 +38,7 @@ public class Reporting {
             System.out.println(e.getMessage());
         }
     }
+//  Generate currently borrowed
     public void currentBorrow(){
         BookManagement bookMgmt = new BookManagement();
         bookMgmt.loadFromFile();
@@ -68,5 +71,34 @@ public class Reporting {
             System.out.printf("%-5s | %-30s | %d%n", bookId, title, qty);
         }
         System.out.println(con.longSeparator+"\n");
+    }
+//  Overdue books
+    public void overdueBooks(){
+        BookManagement bookMgmt = new BookManagement();
+        bookMgmt.loadFromFile();
+        BorrowManagement brrwMgmt = new BorrowManagement();
+        ArrayList<BorrowRecord> records = brrwMgmt.get();
+        LocalDate today = LocalDate.now();
+        boolean hasOverdue = false;
+        System.out.println(con.longSeparator);
+        System.out.format("%-5s | %-25s | %-10s | %-12s | %s%n", "ID", "Title","Member ID","Due Date","Overdue for");
+        System.out.println(con.longSeparator);
+        for (BorrowRecord r : records){
+            if(!r.isReturned() && today.isAfter(r.getDueDate())){
+                hasOverdue = true;
+                long daysLate = ChronoUnit.DAYS.between(r.getDueDate(), today);
+                Book book = bookMgmt.findBookByID(r.getBookId());
+                String title = (book!=null)?book.getTitle():"(Unknown title)";
+                System.out.format("%-5s | %-25s | %-10s | %-12s | %d days%n",
+                        r.getBookId(),
+                        title,
+                        r.getMemberId(),
+                        r.getDueDate(),
+                        daysLate);
+            }
+        }if(!hasOverdue){
+            System.out.println("No overdue books yet.");
+        }
+        System.out.println("\n");
     }
 }
