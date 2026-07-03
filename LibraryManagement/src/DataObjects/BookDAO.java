@@ -39,6 +39,7 @@ public final class BookDAO implements IBookDAO{
         try{
             List<String> lines = filemanager.readDataFromFile();
             for (String line : lines){
+                System.out.println(line);
                 try{
                     String[] parts = line.split("\\|");
                     Book b = new Book(parts[0],parts[1],parts[2],parts[3],Integer.parseInt(parts[4]), Integer.parseInt(parts[5]));

@@ -1,9 +1,14 @@
 package ManagementObject;
 import ManagementObject.BorrowManagement;
+
+import DataObjects.IBookDAO;
+
 import Entites.Book;
 import Entites.BorrowRecord;
+
 import Utilities.DataInput;
 import Utilities.Constants;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -11,8 +16,15 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.HashMap;
 import java.util.List;
+
 public class Reporting {
     private Constants con = new Constants();
+    IBookDAO bookDAO;
+    
+    public Reporting(IBookDAO bookDAO){
+        this.bookDAO = bookDAO;
+    }
+    
     public void reportMenu(){
         
         int choice;
@@ -42,94 +54,106 @@ public class Reporting {
     }
 //  Generate currently borrowed
     public void currentBorrow(){
-        BookManagement bookMgmt = new BookManagement();
-        bookMgmt.loadFromFile();
-        
-        BorrowManagement brrwMgmt = new BorrowManagement();
-        ArrayList<BorrowRecord> records = brrwMgmt.get();
-        
-        // Count active borrows, sorted by ID
-        Map<String, Integer> borrowedQtyByBookId = new TreeMap<>();
-        for (BorrowRecord record : records) {
-            if (!record.isReturned()) {
-                String bookId = record.getBookId().toUpperCase();
-                borrowedQtyByBookId.merge(bookId, 1, Integer::sum);
+        try{
+            BorrowManagement brrwMgmt = new BorrowManagement();
+            ArrayList<BorrowRecord> records = brrwMgmt.get();
+
+            // Count active borrows, sorted by ID
+            Map<String, Integer> borrowedQtyByBookId = new TreeMap<>();
+            for (BorrowRecord record : records) {
+                if (!record.isReturned()) {
+                    String bookId = record.getBookId().toUpperCase();
+                    borrowedQtyByBookId.merge(bookId, 1, Integer::sum);
+                }
             }
+
+            if (borrowedQtyByBookId.isEmpty()) {
+                System.out.println("No books are currently borrowed.\n");
+                return;
+            }
+            System.out.println(con.longSeparator);
+            System.out.format("%-5s | %-30s | %s%n", "ID", "Title", "Borrowed Qty");
+            System.out.println(con.longSeparator);
+
+            for (Map.Entry<String, Integer>entry:borrowedQtyByBookId.entrySet()){
+                String bookId = entry.getKey();
+                int qty = entry.getValue();
+                Book book = bookDAO.getBookById(bookId);
+                String title = (book != null)? book.getTitle():"(Unknown title)";
+                System.out.printf("%-5s | %-30s | %d%n", bookId, title, qty);
+            }
+            System.out.println(con.longSeparator+"\n");
         }
- 
-        if (borrowedQtyByBookId.isEmpty()) {
-            System.out.println("No books are currently borrowed.\n");
-            return;
+        catch (Exception e){
+            System.out.println("Failed to remove: " + e.getMessage() + "\n");
+            e.printStackTrace();
         }
-        System.out.println(con.longSeparator);
-        System.out.format("%-5s | %-30s | %s%n", "ID", "Title", "Borrowed Qty");
-        System.out.println(con.longSeparator);
         
-        for (Map.Entry<String, Integer>entry:borrowedQtyByBookId.entrySet()){
-            String bookId = entry.getKey();
-            int qty = entry.getValue();
-            Book book = bookMgmt.findBookByID(bookId);
-            String title = (book != null)? book.getTitle():"(Unknown title)";
-            System.out.printf("%-5s | %-30s | %d%n", bookId, title, qty);
-        }
-        System.out.println(con.longSeparator+"\n");
     }
 //  Overdue books
     public void overdueBooks(){
-        BookManagement bookMgmt = new BookManagement();
-        bookMgmt.loadFromFile();
-        BorrowManagement brrwMgmt = new BorrowManagement();
-        ArrayList<BorrowRecord> records = brrwMgmt.get();
-        LocalDate today = LocalDate.now();
-        boolean hasOverdue = false;
-        System.out.println(con.longSeparator);
-        System.out.format("%-5s | %-25s | %-10s | %-12s | %s%n", "ID", "Title","Member ID","Due Date","Overdue for");
-        System.out.println(con.longSeparator);
-        for (BorrowRecord r : records){
-            if(!r.isReturned() && today.isAfter(r.getDueDate())){
-                hasOverdue = true;
-                long daysLate = ChronoUnit.DAYS.between(r.getDueDate(), today);
-                Book book = bookMgmt.findBookByID(r.getBookId());
-                String title = (book!=null)?book.getTitle():"(Unknown title)";
-                System.out.format("%-5s | %-25s | %-10s | %-12s | %d days%n",
-                        r.getBookId(),
-                        title,
-                        r.getMemberId(),
-                        r.getDueDate(),
-                        daysLate);
+        try{
+            BorrowManagement brrwMgmt = new BorrowManagement();
+            ArrayList<BorrowRecord> records = brrwMgmt.get();
+            LocalDate today = LocalDate.now();
+            boolean hasOverdue = false;
+            System.out.println(con.longSeparator);
+            System.out.format("%-5s | %-25s | %-10s | %-12s | %s%n", "ID", "Title","Member ID","Due Date","Overdue for");
+            System.out.println(con.longSeparator);
+            for (BorrowRecord r : records){
+                if(!r.isReturned() && today.isAfter(r.getDueDate())){
+                    hasOverdue = true;
+                    long daysLate = ChronoUnit.DAYS.between(r.getDueDate(), today);
+                    Book book = bookDAO.getBookById(r.getBookId());
+                    String title = (book!=null)?book.getTitle():"(Unknown title)";
+                    System.out.format("%-5s | %-25s | %-10s | %-12s | %d days%n",
+                            r.getBookId(),
+                            title,
+                            r.getMemberId(),
+                            r.getDueDate(),
+                            daysLate);
+                }
+            }if(!hasOverdue){
+                System.out.println("No overdue books yet.");
             }
-        }if(!hasOverdue){
-            System.out.println("No overdue books yet.");
+            System.out.println("\n");
         }
-        System.out.println("\n");
+        catch (Exception e){
+            System.out.println("Failed to get overdue books: " + e.getMessage() + "\n");
+            e.printStackTrace();
+        }
+        
     }
 //  Most popular books
     public void mostPopularBooks(){
-        BookManagement bookMgmt = new BookManagement();
-        bookMgmt.loadFromFile();
-        BorrowManagement brrwMgmt = new BorrowManagement();
-        ArrayList<BorrowRecord> records = brrwMgmt.get();
-        if(records.isEmpty()){
-            System.out.println("No borrow records found.\n");
-            return;
+        try{
+            BorrowManagement brrwMgmt = new BorrowManagement();
+            ArrayList<BorrowRecord> records = brrwMgmt.get();
+            if(records.isEmpty()){
+                System.out.println("No borrow records found.\n");
+                return;
+            }
+            Map<String, Integer> countByBookId = new HashMap<>();
+            for (BorrowRecord r : records) {
+                countByBookId.merge(r.getBookId().toUpperCase(), 1, Integer::sum);
+            }
+            List<Map.Entry<String, Integer>> sorted = new ArrayList<>(countByBookId.entrySet());
+            sorted.sort((a, b) -> b.getValue() - a.getValue());
+            System.out.println(con.longSeparator);
+            System.out.format("%-4s | %-5s | %-30s | %s%n", "Rank", "ID", "Title", "Total Borrows");
+            System.out.println(con.longSeparator);
+            int rank = 1;
+            for (Map.Entry<String, Integer> entry : sorted) {
+                Book book = bookDAO.getBookById(entry.getKey());
+                String title = (book != null) ? book.getTitle() : "(Unknown title)";
+                System.out.format("%-4d | %-5s | %-30s | %d%n",
+                    rank++, entry.getKey(), title, entry.getValue());
+            }
+            System.out.println("\n");
+        }catch (Exception e){
+            System.out.println("Failed to get most popular books: " + e.getMessage() + "\n");
+            e.printStackTrace();
         }
-        Map<String, Integer> countByBookId = new HashMap<>();
-        for (BorrowRecord r : records) {
-            countByBookId.merge(r.getBookId().toUpperCase(), 1, Integer::sum);
-        }
-        List<Map.Entry<String, Integer>> sorted = new ArrayList<>(countByBookId.entrySet());
-        sorted.sort((a, b) -> b.getValue() - a.getValue());
-        System.out.println(con.longSeparator);
-        System.out.format("%-4s | %-5s | %-30s | %s%n", "Rank", "ID", "Title", "Total Borrows");
-        System.out.println(con.longSeparator);
-        int rank = 1;
-        for (Map.Entry<String, Integer> entry : sorted) {
-            Book book = bookMgmt.findBookByID(entry.getKey());
-            String title = (book != null) ? book.getTitle() : "(Unknown title)";
-            System.out.format("%-4d | %-5s | %-30s | %d%n",
-                rank++, entry.getKey(), title, entry.getValue());
-        }
-        System.out.println("\n");
-        }
+    }
 }
 

@@ -3,6 +3,7 @@ package Utilities;
 import DataObjects.IBookDAO;
 
 import ManagementObject.BookManagement;
+import ManagementObject.Reporting;
 
 import java.util.Arrays;
 import java.util.List;
@@ -37,5 +38,8 @@ public class Menu {
     public static void manageBook(IBookDAO service){
         BookManagement bmMenu = new BookManagement(service);
     }
-   
+    
+    public static void reporting(IBookDAO service){
+        Reporting rpMenu = new Reporting(service);
+    }
 }

@@ -22,7 +22,6 @@ public class Main {
         // CLASSES
         BorrowManagement brwMgmt = new BorrowManagement();
         MemberManagement mbMgmt = new MemberManagement();
-        Reporting rp = new Reporting();
         Constants con = new Constants();
         
         // VARIABLES
@@ -33,6 +32,8 @@ public class Main {
         
         do {
             try { 
+                IBookDAO bookService = new BookDAO();
+                
                 System.out.println("LIBRARY MANAGEMENT SYSTEM");
                 System.out.println(con.separator);
                 System.out.println("Welcome back!");
@@ -43,7 +44,6 @@ public class Main {
 
                 switch (choice) {
                     case 1:
-                        IBookDAO bookService = new BookDAO();
                         Menu.manageBook(bookService);
                         break;
                     case 2:
@@ -53,7 +53,7 @@ public class Main {
                         brwMgmt.borrowMenu();
                         break;
                     case 4:
-                        rp.reportMenu();
+                        Menu.reporting(bookService);
                         break;
                     case 5:
                         System.out.println("Good bye!\n");
