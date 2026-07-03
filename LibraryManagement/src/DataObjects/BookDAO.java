@@ -88,7 +88,7 @@ public final class BookDAO implements IBookDAO{
     
     @Override
     public void removeBook(Book book) throws Exception{
-        Book b  = getBookById(book.getId());
+        Book b = getBookById(book.getId());
         if(b!= null){
             bookList.remove(b);
         }

@@ -2,36 +2,41 @@ package ManagementObject;
 
 import Entites.Book;
 
+import DataObjects.FileManager;
+import DataObjects.BookDAO;
+import DataObjects.IBookDAO;
+
 import Utilities.DataInput;
 import Utilities.Constants;
 import Utilities.Menu;
+
 import java.util.ArrayList;
 import java.util.Comparator;
-import DataObjects.FileManager;
 import java.io.IOException;
 import java.util.List;
 
 public class BookManagement implements BaseManagement{
-
+    
     private ArrayList<Book> bookList = new ArrayList<>();
     private Constants con = new Constants();
     private FileManager filemanager = new FileManager("books.txt");
     
+    IBookDAO bookDAO;
+    
+    /* Constructor */
+    public BookManagement(IBookDAO bookDAO){
+        this.bookDAO = bookDAO;
+    }
+    
     /* Initializer*/
     public void bookMenu() {
-        
-        loadFromFile();
         int choice;
         
         System.out.println("You have enter Manage Books session!\n");
         try{
-            System.out.println(con.separator + "BOOK MANAGE MENU" + con.separator);
-            System.out.println("1. Add book\n2. Update book\n3. Remove book\n4. View all books\n5. Search books\n6. Back\n");
-            System.out.println("Choose an option(1-6): ");
-
             do {
                 System.out.println(con.separator + "BOOK MANAGE MENU" + con.separator);
-                System.out.println("1. Add book\n2. Update book\n3. Remove book\n4. View all books\n5. Search books\n6. Back\n");
+                System.out.println("1. Add book\n2. Update book\n3. Remove book\n4. View all books\n5. Search books\n6. Save To File\n7. Back\n");
                 System.out.println("Choose an option(1-6): ");
 
 
@@ -51,6 +56,15 @@ public class BookManagement implements BaseManagement{
                         System.out.println("You chose Search books!");
                         searchBook(); break;
                     case 6:
+                        String confirm = DataInput.getString("Do you really want to save? (y/n): ");
+                        if(confirm.equalsIgnoreCase("y")){
+                            saveToFile();
+                            System.out.println("Successfully saved!");
+                        }
+                        else{
+                            System.out.println("Saving cancelled!");
+                        }
+                    case 7:
                         break;
                     default:    
                         System.out.println("Invalid choice. Please try again!\n\n");
@@ -70,12 +84,11 @@ public class BookManagement implements BaseManagement{
                 System.out.println("Adding book cancelled or invalid input.");
                 return; 
             }
-            if (findBookByID(newBook.getId()) != null) {
+            if (bookDAO.getBookById(newBook.getId()) != null) {
                 System.out.println("ID " + newBook.getId() + " is already existed!");
                 return;
             }
-            bookList.add(newBook);
-            saveToFile();
+            bookDAO.addBook(newBook);
             System.out.println("Book added successfully!");
             System.out.println(newBook.getTitle() + " has been added!" + "\n");
         } catch (Exception e) {
@@ -92,95 +105,59 @@ public class BookManagement implements BaseManagement{
     
     @Override
     public void delete(){
-        String id = DataInput.getString("Enter book's ID to remove: ");
-        Book toRemove = findBookByID(id);
-        
-        if(toRemove == null){
-            System.out.println("Book not found.");
-            return;
+        try {
+            String id = DataInput.getString("Enter book's ID to remove: ");
+            Book toRemove = bookDAO.getBookById(id);
+
+            if(toRemove == null){
+                System.out.println("Book not found.");
+                return;
+            }
+            System.out.println("Found: " + toRemove); 
+            String confirm = DataInput.getString("Do you really want to delete this book? (y/n): ");
+            if(confirm.equalsIgnoreCase("y")){
+                //bookList.remove(toRemove);
+                bookDAO.removeBook(toRemove);
+                System.out.println("Book removed!");
+            }
+            else{
+                System.out.println("Remove cancelled!");
+            }
+        } catch (Exception e){
+            System.out.println("Failed to remove: " + e.getMessage() + "\n");
+            e.printStackTrace();
         }
-        System.out.println("Found: " + toRemove); 
-        String confirm = DataInput.getString("Do you really want to delete this book? (y/n): ");
-        if(confirm.equalsIgnoreCase("y")){bookList.remove(toRemove);
-        System.out.println("Book removed!");
-        saveToFile();}
-        else{
-            System.out.println("Remove cancelled!");
-        }
-        
     }
     
     @Override
     public void update() {
-        String id = DataInput.getString("Enter book's ID to update: ");
-        Book toUpdate = findBookByID(id);
-        
-        if (toUpdate == null) {
-            System.out.println("Book not found.");
-            return;
-        }
-        
-        System.out.println("Found book: " + toUpdate);
-        System.out.println("Enter new information (Press Enter to keep current data):");
-        
-        try {
-            // Cập nhật Title
-            String newTitle = DataInput.getString("Enter new title: ");
-            if (!newTitle.trim().isEmpty()) toUpdate.setTitle(newTitle);
+        try {        
+            String id = DataInput.getString("Enter book's ID to update: ");
+            Book toUpdate = bookDAO.getBookById(id);
+
+            if (toUpdate == null) {
+                System.out.println("Book not found.");
+                return;
+            }
+
+            System.out.println("Found book: " + toUpdate.getId());
+            System.out.println("Enter new information (Press Enter to keep current data):");
             
-            // Cập nhật Author
-            String newAuthor = DataInput.getString("Enter new author: ");
-            if (!newAuthor.trim().isEmpty()) toUpdate.setAuthor(newAuthor);
+            setNewBookInfo(toUpdate);
+            bookDAO.updateBook(toUpdate);
             
-            // Cập nhật Genre
-            String newGenre = DataInput.getString("Enter new genre: ");
-            if (!newGenre.trim().isEmpty()) toUpdate.setGenre(newGenre);
-            
-            saveToFile();
             System.out.println("Book updated successfully!");
-            
+
         } catch (Exception e) {
             System.out.println("Failed to update: " + e.getMessage());
         }
     }
     
     /* File & Basic IO */
-    public void saveToFile(){
-        StringBuilder strb = new StringBuilder();
-        for (Book b : bookList){
-            strb.append(b.getId()).append("|");
-            strb.append(b.getTitle()).append("|");
-            strb.append(b.getAuthor()).append("|");
-            strb.append(b.getGenre()).append("|");
-            strb.append(b.getPubYear()).append("|");
-            strb.append(b.getQuantity()).append("|");
-            strb.append(System.lineSeparator());
-        }
-        try{
-            filemanager.saveDataToFile(strb.toString());
-            System.out.println("Book list saved!");
-        }catch (IOException e){
-            System.out.println("Fail to save: "+e.getMessage());
-        }
+    public void saveToFile() throws Exception{
+        bookDAO.saveBooksToFile();
     }
-    public void loadFromFile(){
-        bookList.clear();
-        try{
-            List<String> lines = filemanager.readDataFromFile();
-            for (String line : lines){
-                try{
-                    String[] parts = line.split("\\|");
-                    Book b = new Book(parts[0],parts[1],parts[2],parts[3],Integer.parseInt(parts[4]), Integer.parseInt(parts[5]));
-                    bookList.add(b);
-                }catch(Exception e){
-                    System.out.println("Corrupted data in: "+e.getMessage());
-                }
-            }
-        }catch(IOException e){
-            System.out.println("No data found!");
-        }    
-    }
-   
+    
     public Book inputBook() throws Exception {
         String ID = DataInput.getString("Enter book's id:");
         String Title = DataInput.getString("Enter book's title:");
@@ -190,6 +167,26 @@ public class BookManagement implements BaseManagement{
         int Quantity = DataInput.getIntegerNumber("Enter recent amount:");
         
         return new Book(ID, Title, Author, Genre, PubYear, Quantity);
+    }
+    
+    public void setNewBookInfo(Book book) throws Exception{
+        // Cập nhật Title
+        String newTitle = DataInput.getString("Enter new title: ");
+        if (!newTitle.trim().isEmpty()) book.setTitle(newTitle);
+            
+        // Cập nhật Author
+        String newAuthor = DataInput.getString("Enter new author: ");
+        if (!newAuthor.trim().isEmpty()) book.setAuthor(newAuthor);
+            
+        // Cập nhật Genre
+        String newGenre = DataInput.getString("Enter new genre: ");
+        if (!newGenre.trim().isEmpty()) book.setGenre(newGenre);   
+        
+        int newPubYear = DataInput.getIntegerNumber("Enter new publication year: ");
+        if (newPubYear != 0){ book.setPubYear(newPubYear); }
+        
+        int newQuantity = DataInput.getIntegerNumber("Enter new amount: ");
+        if (newQuantity != 0){book.setQuantity(newQuantity);}
     }
     
     public void viewBookList() {
@@ -204,15 +201,6 @@ public class BookManagement implements BaseManagement{
             System.out.println(book);
         }
         System.out.println(con.longSeparator);
-    }
-
-    public Book findBookByID(String id) {
-        for (Book bk : bookList) {
-            if (bk.getId().equalsIgnoreCase(id)) {
-                return bk;
-            }
-        }
-        return null;
     }
 
     public void searchBook() {

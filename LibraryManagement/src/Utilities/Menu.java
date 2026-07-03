@@ -1,6 +1,9 @@
 package Utilities;
 
+import DataObjects.IBookDAO;
+
 import ManagementObject.BookManagement;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,8 +34,8 @@ public class Menu {
         return number;
     }
     
-    public static void manageBook(){
-        BookManagement bmMenu = new BookManagement();
+    public static void manageBook(IBookDAO service){
+        BookManagement bmMenu = new BookManagement(service);
     }
    
 }

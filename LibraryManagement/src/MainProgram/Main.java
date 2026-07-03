@@ -7,14 +7,19 @@ import ManagementObject.BookManagement;
 import ManagementObject.BorrowManagement;
 import ManagementObject.MemberManagement;
 import ManagementObject.Reporting;
+
 import Utilities.Constants;
 import Utilities.DataInput;
+
+import DataObjects.BookDAO;
+import DataObjects.IBookDAO;
+
+import Utilities.Menu;
 
 public class Main {
 
     public static void main(String[] args) {
         // CLASSES
-        BookManagement bookMgmt = new BookManagement();
         BorrowManagement brwMgmt = new BorrowManagement();
         MemberManagement mbMgmt = new MemberManagement();
         Reporting rp = new Reporting();
@@ -38,7 +43,8 @@ public class Main {
 
                 switch (choice) {
                     case 1:
-                        bookMgmt.bookMenu();
+                        IBookDAO bookService = new BookDAO();
+                        Menu.manageBook(bookService);
                         break;
                     case 2:
                         mbMgmt.memberMenu();
