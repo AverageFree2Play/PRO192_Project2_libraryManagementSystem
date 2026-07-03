@@ -68,7 +68,7 @@ public class BookManagement implements BaseManagement{
                     default:    
                         System.out.println("Invalid choice. Please try again!\n\n");
                 }
-            } while (choice != 6);
+            } while (choice != 7);
         }catch (Exception ex){
                 System.out.println(ex.getMessage());
         }
