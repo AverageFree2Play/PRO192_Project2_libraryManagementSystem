@@ -16,16 +16,15 @@ import java.io.IOException;
 import java.util.List;
 
 public class BookManagement implements BaseManagement{
-    
-    private ArrayList<Book> bookList = new ArrayList<>();
     private Constants con = new Constants();
     private FileManager filemanager = new FileManager("books.txt");
     
     IBookDAO bookDAO;
-    
+    ArrayList<Book> bookList;
     /* Constructor */
     public BookManagement(IBookDAO bookDAO){
         this.bookDAO = bookDAO;
+        this.bookList = bookDAO.getBooks();
     }
     
     /* Initializer*/

@@ -1,10 +1,12 @@
 package DataObjects;
 
 import Entites.Book;
+
 import java.util.List;
+import java.util.ArrayList;
 
 public interface IBookDAO {
-    List<Book> getBooks() throws Exception;
+    ArrayList<Book> getBooks();
     Book getBookById(String id) throws Exception;
     
     void addBook(Book book) throws Exception;
@@ -12,5 +14,5 @@ public interface IBookDAO {
     void removeBook(Book book) throws Exception;
     void saveBooksToFile() throws Exception;
     
-    List<Book> searchBook(String keyword) throws Exception;
+    ArrayList<Book> searchBook(String keyword) throws Exception;
 }

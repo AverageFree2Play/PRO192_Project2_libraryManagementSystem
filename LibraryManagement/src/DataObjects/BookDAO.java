@@ -39,7 +39,6 @@ public final class BookDAO implements IBookDAO{
         try{
             List<String> lines = filemanager.readDataFromFile();
             for (String line : lines){
-                System.out.println(line);
                 try{
                     String[] parts = line.split("\\|");
                     Book b = new Book(parts[0],parts[1],parts[2],parts[3],Integer.parseInt(parts[4]), Integer.parseInt(parts[5]));
@@ -54,8 +53,8 @@ public final class BookDAO implements IBookDAO{
     }
     
     @Override
-    public List<Book> getBooks() throws Exception{
-        Collections.sort(bookList,(e1,e2)->e1.getId().compareTo(e2.getId()));
+    public ArrayList<Book> getBooks(){
+        //Collections.sort(bookList,(e1,e2)->e1.getId().compareTo(e2.getId()));
         return bookList;
     }
     
@@ -96,7 +95,7 @@ public final class BookDAO implements IBookDAO{
     }
     
     @Override
-    public List<Book> searchBook(String keyword) {
+    public ArrayList<Book> searchBook(String keyword) {
         ArrayList<Book> foundBooks = new ArrayList<>();
         
         for (Book b : bookList) {

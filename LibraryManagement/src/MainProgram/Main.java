@@ -64,6 +64,7 @@ public class Main {
                 }
             } catch (Exception ex) {
                 System.out.println("Error: " + ex.getMessage() + " Please enter a valid number.\n");
+                ex.printStackTrace();
             }
         } while (run);
     }

@@ -37,6 +37,7 @@ public class Menu {
     
     public static void manageBook(IBookDAO service){
         BookManagement bmMenu = new BookManagement(service);
+        bmMenu.bookMenu();
     }
     
     public static void reporting(IBookDAO service){
