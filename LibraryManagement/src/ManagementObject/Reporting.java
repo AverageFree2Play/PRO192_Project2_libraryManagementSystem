@@ -3,6 +3,7 @@ import ManagementObject.BorrowManagement;
 
 import DataObjects.IBookDAO;
 
+import ManagementObject.MemberManagement;
 import Entites.Book;
 import Entites.BorrowRecord;
 
@@ -39,7 +40,7 @@ public class Reporting {
                 case 2:
                     overdueBooks();break;
                 case 3:
-                    System.out.println("You chose print most popular books!");break;
+                    mostPopularBooks();break;
                 case 4:
                     System.out.println("You chose print members with most borrowings!"); break;
                 case 5:
@@ -155,5 +156,9 @@ public class Reporting {
             e.printStackTrace();
         }
     }
+//  Most borrowing members
+    public void mostBorrowingMember(){
+        MemberManagement mbMgmt = new MemberManagement();
+}
 }
 
