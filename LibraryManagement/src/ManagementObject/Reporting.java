@@ -6,6 +6,7 @@ import DataObjects.IBookDAO;
 import ManagementObject.MemberManagement;
 import Entites.Book;
 import Entites.BorrowRecord;
+import Entites.Member;
 
 import Utilities.DataInput;
 import Utilities.Constants;
@@ -42,7 +43,7 @@ public class Reporting {
                 case 3:
                     mostPopularBooks();break;
                 case 4:
-                    System.out.println("You chose print members with most borrowings!"); break;
+                    mostBorrowingMember(); break;
                 case 5:
                     break;
                 default:
@@ -158,7 +159,34 @@ public class Reporting {
     }
 //  Most borrowing members
     public void mostBorrowingMember(){
-        MemberManagement mbMgmt = new MemberManagement();
-}
+        try{
+            BorrowManagement brrwMgmt = new BorrowManagement();
+            MemberManagement mbMgmt = new MemberManagement();
+            mbMgmt.loadFromFile();
+            ArrayList<BorrowRecord> rec = brrwMgmt.get();
+            if(rec.isEmpty()){
+                System.out.println("No borrow records found! \n"); return;
+            }
+            Map<String, Integer> countByMemberId = new HashMap<>();
+            for(BorrowRecord r : rec){
+                countByMemberId.merge(r.getMemberId().toUpperCase(), 1, Integer::sum);
+            }
+            List<Map.Entry<String, Integer>> sorted = new ArrayList<>(countByMemberId.entrySet());
+            sorted.sort((a,b)->b.getValue()- a.getValue());
+            System.out.println(con.longSeparator);
+            System.out.format("%-4s | %-5s | %-25s | %s%n", "Rank", "ID", "Name", "Total Borrow");
+            System.out.println(con.longSeparator);
+            int rank = 1;
+            for (Map.Entry<String, Integer> entry:sorted){
+                Member mem = mbMgmt.findMemberByID(entry.getKey());
+                String name = (mem != null) ? mem.getName():"(Unknown member)";
+                System.out.format("%-4d | %-5s | %-25s | %d%n", rank++, entry.getKey(),name,entry.getValue());
+            }
+            System.out.println("\n");
+        }catch(Exception e){
+            System.out.println("Failed to get most borrowing members: " + e.getMessage() + "\n");
+            e.printStackTrace();
+        }
+    }
 }
 

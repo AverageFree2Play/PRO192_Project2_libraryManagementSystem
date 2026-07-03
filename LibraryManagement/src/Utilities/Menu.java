@@ -42,5 +42,6 @@ public class Menu {
     
     public static void reporting(IBookDAO service){
         Reporting rpMenu = new Reporting(service);
+        rpMenu.reportMenu();
     }
 }
