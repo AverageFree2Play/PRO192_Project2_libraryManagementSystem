@@ -15,7 +15,8 @@ public final class BookDAO implements IBookDAO{
         loadFromFile();
     }
     
-    public void saveToFile(){
+    @Override
+    public void saveBooksToFile(){
         StringBuilder strb = new StringBuilder();
         for (Book b : bookList){
             strb.append(b.getId()).append("|");
