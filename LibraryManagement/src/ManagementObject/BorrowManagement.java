@@ -74,7 +74,7 @@ public class BorrowManagement implements BaseManagement<BorrowRecord> {
             String memberId = DataInput.getString("Enter Member ID: ").toUpperCase();
 
             LocalDate borrowDate = LocalDate.now();
-            LocalDate dueDate = borrowDate.plusDays(14); 
+            LocalDate dueDate = borrowDate.plusDays(14);
 
             // Pass recordId into the constructor
             BorrowRecord record = new BorrowRecord(recordId, bookId, memberId, borrowDate, dueDate, false);

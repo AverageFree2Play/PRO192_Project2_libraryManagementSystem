@@ -182,7 +182,7 @@ public class Reporting {
                 String name = (mem != null) ? mem.getName():"(Unknown member)";
                 System.out.format("%-4d | %-5s | %-25s | %d%n", rank++, entry.getKey(),name,entry.getValue());
             }
-            System.out.println("\n");
+            System.out.println("\n");   
         }catch(Exception e){
             System.out.println("Failed to get most borrowing members: " + e.getMessage() + "\n");
             e.printStackTrace();

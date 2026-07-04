@@ -44,7 +44,6 @@ public class BookManagement implements BaseManagement{
                     case 1:
                         add(); break;
                     case 2:
-                        System.out.println("You chose Update book!");
                         update(); break;
                     case 3:
                         delete(); break;
@@ -52,7 +51,6 @@ public class BookManagement implements BaseManagement{
                         System.out.println("Books list: ");
                         viewBookList(); break;
                     case 5:
-                        System.out.println("You chose Search books!");
                         searchBook(); break;
                     case 6:
                         String confirm = DataInput.getString("Do you really want to save? (y/n): ");
