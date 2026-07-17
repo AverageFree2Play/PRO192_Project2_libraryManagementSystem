@@ -1,0 +1,2 @@
+M001|Kien|0901040607|trungkien@gmail.com|Y
+M002|Vuong|0903123456|vuong123@gmail.com|N

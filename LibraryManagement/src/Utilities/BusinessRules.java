@@ -57,7 +57,15 @@ public class BusinessRules {
  * ==============================================================================
  */
 
-    public static final int MAX_BORROW_LIMIT = 3;       // BR5: Giới hạn mượn 3 cuốn
+    public static final int NORMAL_BORROW_LIMIT = 3;     // BR5: Giới hạn mượn 3 cuốn
+    public static final int PREMIUM_BORROW_LIMIT = 5;
+
+    public static final int NORMAL_BORROW_DAYS = 14;
+    public static final int PREMIUM_BORROW_DAYS = 30;
+    
+    public static final int NORMAL_EXTEND_DAYS = 7;
+    public static final int PREMIUM_EXTEND_DAYS = 14;
+
     public static final double FINE_PER_DAY = 5000.0;   // BR7: Phạt 5,000 VND/ngày
 
     //--------------- BUSINESS RULE METHODS -------------------

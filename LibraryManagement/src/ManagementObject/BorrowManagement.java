@@ -2,6 +2,7 @@ package ManagementObject;
 
 import DataObjects.FileManager;
 import Entites.BorrowRecord;
+import Entites.Member; // Import thêm class Member
 import Utilities.Constants;
 import Utilities.DataInput;
 
@@ -18,9 +19,12 @@ public class BorrowManagement implements BaseManagement<BorrowRecord> {
     private FileManager fileManager = new FileManager("borrows.txt");
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private Constants con = new Constants();
+    
+    private MemberManagement memberMgmt = new MemberManagement();
 
     public BorrowManagement() {
         loadFromFile();
+        memberMgmt.loadFromFile(); 
     }
 
     private String generateTransactionId() {
@@ -35,7 +39,6 @@ public class BorrowManagement implements BaseManagement<BorrowRecord> {
                     maxId = idNum;
                 }
             } catch (Exception e) {
-                // Bỏ qua nếu ID cũ không chuẩn
             }
         }
         return String.format("TR%03d", maxId + 1);
@@ -80,12 +83,30 @@ public class BorrowManagement implements BaseManagement<BorrowRecord> {
     public void add() {
         System.out.println("\n--- Borrow a Book ---");
         try {
+            String memberId = DataInput.getString("Enter Member ID: ").toUpperCase();
+            
+            memberMgmt.loadFromFile();
+            Member foundMember = memberMgmt.findMemberByID(memberId);
+            
+            if (foundMember == null) {
+                System.out.println(">>> ERROR: Member ID '" + memberId + "' does not exist in the system!");
+                System.out.println(">>> Transaction cancelled.\n");
+                return;
+            }
+
             String recordId = generateTransactionId();
             System.out.println("Transaction ID auto-generated: " + recordId);
+            System.out.println("Borrower Name: " + foundMember.getName()); // In tên cho thân thiện!
             
-            String memberId = DataInput.getString("Enter Member ID: ").toUpperCase();
+            boolean isPremium = foundMember.isPremium();
+            int borrowLimit = isPremium ? 5 : 3; // Premium borrow 5, normal 3
+            int borrowDays = isPremium ? 30 : 14; // Premium borrow for a month, normal 2 weeks
+            
+            if (isPremium) {
+                System.out.println("*** PREMIUM MEMBER DETECTED: Limit " + borrowLimit + " books, " + borrowDays + " days ***");
+            }
 
-            // Kiểm tra giới hạn mượn (Tối đa 3 cuốn)
+            // 5. BORROW LIMIT
             int activeBorrows = 0;
             for (BorrowRecord record : borrowList) {
                 if (record.getMemberId().equals(memberId) && !record.isReturned()) {
@@ -93,16 +114,17 @@ public class BorrowManagement implements BaseManagement<BorrowRecord> {
                 }
             }
             
-            if (activeBorrows >= 3) {
-                System.out.println(">>> DENIED: Member " + memberId + " has reached the limit of 3 unreturned books.");
+            if (activeBorrows >= borrowLimit) {
+                System.out.println(">>> DENIED: Member " + memberId + " has reached the limit of " + borrowLimit + " unreturned books.");
                 System.out.println(">>> Please return a book before borrowing a new one.\n");
                 return; 
             }
 
             String bookId = DataInput.getString("Enter Book ID: ").toUpperCase();
 
+            // 6. CALCULATE DAYS RETURN
             LocalDate borrowDate = LocalDate.now();
-            LocalDate dueDate = borrowDate.plusDays(14); 
+            LocalDate dueDate = borrowDate.plusDays(borrowDays); 
 
             BorrowRecord record = new BorrowRecord(recordId, bookId, memberId, borrowDate, dueDate, false, null);
             borrowList.add(record);
@@ -118,7 +140,7 @@ public class BorrowManagement implements BaseManagement<BorrowRecord> {
 
     @Override
     public void update() {
-        System.out.println("\n--- Edit Borrow Record ---");
+        System.out.println("\n--- Edit/Extend Borrow Record ---");
         String bookId = DataInput.getString("Enter Book ID of the record: ").toUpperCase();
         String memberId = DataInput.getString("Enter Member ID of the record: ").toUpperCase();
         
@@ -136,44 +158,23 @@ public class BorrowManagement implements BaseManagement<BorrowRecord> {
             return;
         }
         
+        // CHECK PREMIUM FOR LONGER EXTEND
+        memberMgmt.loadFromFile();
+        Member foundMember = memberMgmt.findMemberByID(memberId);
+        boolean isPremium = (foundMember != null) && foundMember.isPremium();
+        
+        int extendDays = isPremium ? 14 : 7; // Premium extend 2 weeks, normal a week
+        
         System.out.println("Record found! Current Due Date: " + recordToEdit.getDueDate().format(DATE_FORMAT));
-        String extendStr = DataInput.getString("Do you want to extend the due date by 7 days? (y/n): ");
+        String extendStr = DataInput.getString("Extend the due date by " + extendDays + " days? (y/n): ");
         
         if (extendStr.equalsIgnoreCase("y")) {
-            LocalDate newDate = recordToEdit.getDueDate().plusDays(7);
+            LocalDate newDate = recordToEdit.getDueDate().plusDays(extendDays);
             recordToEdit.setDueDate(newDate); 
             System.out.println("Due date extended! New Due Date: " + newDate.format(DATE_FORMAT) + "\n");
             saveToFile();
         } else {
             System.out.println("Update cancelled.\n");
-        }
-    }
-
-    @Override
-    public void delete() {
-        System.out.println("\n--- Delete Borrow Record ---");
-        String recordId = DataInput.getString("Enter Transaction ID to delete (e.g., TR001): ").toUpperCase();
-        
-        BorrowRecord recordToRemove = null;
-        for (BorrowRecord record : borrowList) {
-            if (record.getId().equals(recordId)) {
-                recordToRemove = record;
-                break;
-            }
-        }
-        
-        if (recordToRemove == null) {
-            System.out.println("Record not found.\n");
-            return;
-        }
-        
-        String confirm = DataInput.getString("Are you sure you want to completely delete this transaction? (y/n): ");
-        if (confirm.equalsIgnoreCase("y")) {
-            borrowList.remove(recordToRemove);
-            saveToFile();
-            System.out.println("Record permanently deleted!\n");
-        } else {
-            System.out.println("Deletion cancelled.\n");
         }
     }
 
@@ -203,10 +204,10 @@ public class BorrowManagement implements BaseManagement<BorrowRecord> {
                 System.out.println(">>> Returned By (Member ID): " + memberId);
                 System.out.println(">>> Return Date: " + today.format(DATE_FORMAT));
 
-                // XỬ LÝ OVERDUE (TRỄ HẠN) VÀ TÍNH TIỀN PHẠT
+                // HANDLE OVERDUE & FINE
                 if (today.isAfter(record.getDueDate())) {
                     long daysLate = ChronoUnit.DAYS.between(record.getDueDate(), today);
-                    double fineAmount = daysLate * 5000.0; // 5000 VND / 1 ngày trễ
+                    double fineAmount = daysLate * 5000.0;
                     
                     System.out.println("-------------------------------------------------");
                     System.out.println(" [!] WARNING: RETURN BOOK OVERDUED FOR " + daysLate + " DAYS!");
