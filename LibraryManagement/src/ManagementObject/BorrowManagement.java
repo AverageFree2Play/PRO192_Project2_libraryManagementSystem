@@ -1,8 +1,5 @@
 package ManagementObject;
-/**
- *
- * @author Trung Kien
- */
+
 import DataObjects.FileManager;
 import Entites.BorrowRecord;
 import Utilities.Constants;
@@ -10,7 +7,7 @@ import Utilities.DataInput;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter; // UPDATED
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,16 +16,32 @@ public class BorrowManagement implements BaseManagement<BorrowRecord> {
 
     private ArrayList<BorrowRecord> borrowList = new ArrayList<>();
     private FileManager fileManager = new FileManager("borrows.txt");
-    private Constants con = new Constants();
-    
-    // ADDED: The formatter used for printing and loading dates
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private Constants con = new Constants();
 
-    // Constructor loads existing data
     public BorrowManagement() {
         loadFromFile();
     }
 
+    private String generateTransactionId() {
+        if (borrowList.isEmpty()) {
+            return "TR001";
+        }
+        int maxId = 0;
+        for (BorrowRecord record : borrowList) {
+            try {
+                int idNum = Integer.parseInt(record.getId().substring(2));
+                if (idNum > maxId) {
+                    maxId = idNum;
+                }
+            } catch (Exception e) {
+                // Bỏ qua nếu ID cũ không chuẩn
+            }
+        }
+        return String.format("TR%03d", maxId + 1);
+    }
+
+    // MENU
     public void borrowMenu() {
         int choice = 0;
         System.out.println("You have entered Manage Borrow/Return session!\n");
@@ -59,25 +72,39 @@ public class BorrowManagement implements BaseManagement<BorrowRecord> {
             } catch (Exception e) {
                 System.out.println("Invalid input! Please enter a valid number.\n");
             }
-            
         } while(choice != 7);
     }
 
-    // CRUD IMPLEMENTATIONS
+    // CRUD & BUSINESS LOGIC
     @Override
     public void add() {
         System.out.println("\n--- Borrow a Book ---");
         try {
-            // Ask for the new Record ID
-            String recordId = DataInput.getString("Enter Transaction ID (e.g., TR01): ").toUpperCase();
-            String bookId = DataInput.getString("Enter Book ID: ").toUpperCase();
+            String recordId = generateTransactionId();
+            System.out.println("Transaction ID auto-generated: " + recordId);
+            
             String memberId = DataInput.getString("Enter Member ID: ").toUpperCase();
 
-            LocalDate borrowDate = LocalDate.now();
-            LocalDate dueDate = borrowDate.plusDays(14);
+            // Kiểm tra giới hạn mượn (Tối đa 3 cuốn)
+            int activeBorrows = 0;
+            for (BorrowRecord record : borrowList) {
+                if (record.getMemberId().equals(memberId) && !record.isReturned()) {
+                    activeBorrows++;
+                }
+            }
+            
+            if (activeBorrows >= 3) {
+                System.out.println(">>> DENIED: Member " + memberId + " has reached the limit of 3 unreturned books.");
+                System.out.println(">>> Please return a book before borrowing a new one.\n");
+                return; 
+            }
 
-            // Pass recordId into the constructor
-            BorrowRecord record = new BorrowRecord(recordId, bookId, memberId, borrowDate, dueDate, false);
+            String bookId = DataInput.getString("Enter Book ID: ").toUpperCase();
+
+            LocalDate borrowDate = LocalDate.now();
+            LocalDate dueDate = borrowDate.plusDays(14); 
+
+            BorrowRecord record = new BorrowRecord(recordId, bookId, memberId, borrowDate, dueDate, false, null);
             borrowList.add(record);
             saveToFile();
 
@@ -100,7 +127,7 @@ public class BorrowManagement implements BaseManagement<BorrowRecord> {
         for (BorrowRecord record : borrowList) {
             if (record.getBookId().equals(bookId) && record.getMemberId().equals(memberId) && !record.isReturned()) {
                 recordToEdit = record;
-                break; // Grabs the active borrow
+                break; 
             }
         }
         
@@ -109,14 +136,12 @@ public class BorrowManagement implements BaseManagement<BorrowRecord> {
             return;
         }
         
-        // UPDATED: Formatted output
         System.out.println("Record found! Current Due Date: " + recordToEdit.getDueDate().format(DATE_FORMAT));
         String extendStr = DataInput.getString("Do you want to extend the due date by 7 days? (y/n): ");
         
         if (extendStr.equalsIgnoreCase("y")) {
             LocalDate newDate = recordToEdit.getDueDate().plusDays(7);
-            recordToEdit.setDueDate(newDate);
-            // UPDATED: Formatted output
+            recordToEdit.setDueDate(newDate); 
             System.out.println("Due date extended! New Due Date: " + newDate.format(DATE_FORMAT) + "\n");
             saveToFile();
         } else {
@@ -127,12 +152,11 @@ public class BorrowManagement implements BaseManagement<BorrowRecord> {
     @Override
     public void delete() {
         System.out.println("\n--- Delete Borrow Record ---");
-        String bookId = DataInput.getString("Enter Book ID of the record: ").toUpperCase();
-        String memberId = DataInput.getString("Enter Member ID of the record: ").toUpperCase();
+        String recordId = DataInput.getString("Enter Transaction ID to delete (e.g., TR001): ").toUpperCase();
         
         BorrowRecord recordToRemove = null;
         for (BorrowRecord record : borrowList) {
-            if (record.getBookId().equals(bookId) && record.getMemberId().equals(memberId)) {
+            if (record.getId().equals(recordId)) {
                 recordToRemove = record;
                 break;
             }
@@ -158,7 +182,6 @@ public class BorrowManagement implements BaseManagement<BorrowRecord> {
         return borrowList;
     }
 
-    // LIBRARY LOGIC METHODS
     private void returnBook() {
         System.out.println("\n--- Return a Book ---");
         String bookId = DataInput.getString("Enter Book ID to return: ").toUpperCase();
@@ -168,15 +191,27 @@ public class BorrowManagement implements BaseManagement<BorrowRecord> {
         
         for (BorrowRecord record : borrowList) {
             if (record.getBookId().equals(bookId) && record.getMemberId().equals(memberId) && !record.isReturned()) {
+                
                 record.setReturned(true);
+                LocalDate today = LocalDate.now();
+                record.setActualReturnDate(today);
+                
                 found = true;
                 saveToFile();
-                System.out.println("Book " + bookId + " successfully returned!");
+                
+                System.out.println(">>> SUCCESS: Book " + bookId + " has been returned.");
+                System.out.println(">>> Returned By (Member ID): " + memberId);
+                System.out.println(">>> Return Date: " + today.format(DATE_FORMAT));
 
-                LocalDate today = LocalDate.now();
+                // XỬ LÝ OVERDUE (TRỄ HẠN) VÀ TÍNH TIỀN PHẠT
                 if (today.isAfter(record.getDueDate())) {
                     long daysLate = ChronoUnit.DAYS.between(record.getDueDate(), today);
-                    System.out.println("WARNING: This book was returned " + daysLate + " days late.");
+                    double fineAmount = daysLate * 5000.0; // 5000 VND / 1 ngày trễ
+                    
+                    System.out.println("-------------------------------------------------");
+                    System.out.println(" [!] WARNING: RETURN BOOK OVERDUED FOR " + daysLate + " DAYS!");
+                    System.out.println(" [!] FINE AMOUNT TO BE COLLECTED: " + String.format("%,.0f", fineAmount) + " VND");
+                    System.out.println("-------------------------------------------------");
                 }
                 System.out.println();
                 break; 
@@ -198,9 +233,13 @@ public class BorrowManagement implements BaseManagement<BorrowRecord> {
             if (!record.isReturned() && today.isAfter(record.getDueDate())) {
                 hasOverdue = true;
                 long daysLate = ChronoUnit.DAYS.between(record.getDueDate(), today);
-                System.out.println("- Book ID: " + record.getBookId() + 
+                double estimatedFine = daysLate * 5000.0;
+                
+                System.out.println("- Trans ID: " + record.getId() + 
+                                   " | Book ID: " + record.getBookId() + 
                                    " | Member ID: " + record.getMemberId() + 
-                                   " | Days Late: " + daysLate);
+                                   " | Days Late: " + daysLate +
+                                   " | Estimated Fine: " + String.format("%,.0f", estimatedFine) + " VND");
             }
         }
 
@@ -209,28 +248,34 @@ public class BorrowManagement implements BaseManagement<BorrowRecord> {
             return;
         }
 
-        String bookId = DataInput.getString("\nEnter the Book ID to process the overdue return (or press Enter to cancel): ").toUpperCase();
-        if (bookId.trim().isEmpty()) {
+        String transId = DataInput.getString("\nEnter the Transaction ID to process the overdue return (or press Enter to cancel): ").toUpperCase();
+        if (transId.trim().isEmpty()) {
             System.out.println("Action canceled.\n");
             return;
         }
 
-        String memberId = DataInput.getString("Enter the Member ID: ").toUpperCase();
-
         boolean found = false;
         for (BorrowRecord record : borrowList) {
-            if (record.getBookId().equals(bookId) && record.getMemberId().equals(memberId) && !record.isReturned() && today.isAfter(record.getDueDate())) {
+            if (record.getId().equals(transId) && !record.isReturned() && today.isAfter(record.getDueDate())) {
                 record.setReturned(true);
+                record.setActualReturnDate(today);
                 found = true;
                 saveToFile();
-                System.out.println("Overdue Book " + bookId + " successfully returned.");
-                System.out.println("*** Please collect applicable late fees from the member. ***\n");
+                
+                long daysLate = ChronoUnit.DAYS.between(record.getDueDate(), today);
+                double finalFine = daysLate * 5000.0;
+                
+                System.out.println(">>> SUCCESS: Overdue Trans ID " + transId + " successfully returned.");
+                System.out.println(">>> Returned By (Member ID): " + record.getMemberId());
+                System.out.println("-------------------------------------------------");
+                System.out.println(" TOTAL FINE AMOUNT TO BE COLLECTED DIRECTLY: " + String.format("%,.0f", finalFine) + " VND");
+                System.out.println("-------------------------------------------------\n");
                 break;
             }
         }
 
         if (!found) {
-            System.out.println("Could not find an active overdue record matching those details.\n");
+            System.out.println("Could not find an active overdue record matching that Transaction ID.\n");
         }
     }
 
@@ -239,18 +284,21 @@ public class BorrowManagement implements BaseManagement<BorrowRecord> {
             System.out.println("No records found.\n");
             return;
         }
-        System.out.println(con.longSeparator); 
-        System.out.format("%-10s | %-10s | %-12s | %-12s | %-10s%n", "Book ID", "Member ID", "Borrow Date", "Due Date", "Status");
+        System.out.println(con.longSeparator);
+        System.out.format("%-8s | %-10s | %-10s | %-12s | %-12s | %-10s | %-12s%n", 
+            "Trans ID", "Book ID", "Member ID", "Borrow Date", "Due Date", "Status", "Return Date");
         System.out.println(con.longSeparator);
         for (BorrowRecord r : borrowList) {
-            // UPDATED: Formatted output for the table
-            System.out.format("%-10s | %-10s | %-12s | %-12s | %-10s%n", 
-                r.getBookId(), r.getMemberId(), r.getBorrowDate().format(DATE_FORMAT), r.getDueDate().format(DATE_FORMAT), (r.isReturned() ? "Returned" : "Active"));
+            String returnDateStr = (r.getActualReturnDate() != null) ? r.getActualReturnDate().format(DATE_FORMAT) : "Not yet";
+            
+            System.out.format("%-8s | %-10s | %-10s | %-12s | %-12s | %-10s | %-12s%n", 
+                r.getId(), r.getBookId(), r.getMemberId(), r.getBorrowDate().format(DATE_FORMAT), 
+                r.getDueDate().format(DATE_FORMAT), (r.isReturned() ? "Returned" : "Active"), returnDateStr);
         }
         System.out.println(con.longSeparator + "\n");
     }
 
-    // FILE I/O METHODS
+    // FILE I/O
     private void saveToFile() {
         StringBuilder strb = new StringBuilder();
         for (BorrowRecord record : borrowList) {
@@ -269,15 +317,19 @@ public class BorrowManagement implements BaseManagement<BorrowRecord> {
             for (String line : lines) {
                 if (line.trim().isEmpty()) continue;
                 String[] parts = line.split("\\|");
-                // Change from 5 to 6
-                if (parts.length == 6) {
+                
+                // Đọc format 7 trường dữ liệu
+                if (parts.length == 7) {
+                    LocalDate actualReturn = parts[6].equals("NULL") ? null : LocalDate.parse(parts[6], DATE_FORMAT);
+                    
                     BorrowRecord record = new BorrowRecord(
                         parts[0], // recordId
                         parts[1], // bookId
                         parts[2], // memberId
                         LocalDate.parse(parts[3], DATE_FORMAT), 
                         LocalDate.parse(parts[4], DATE_FORMAT), 
-                        Boolean.parseBoolean(parts[5])
+                        Boolean.parseBoolean(parts[5]),
+                        actualReturn
                     );
                     borrowList.add(record);
                 }

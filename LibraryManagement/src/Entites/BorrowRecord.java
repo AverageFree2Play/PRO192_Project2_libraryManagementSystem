@@ -1,12 +1,8 @@
 package Entites;
-/**
- *
- * @author Trung Kien
- */
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-// Inherit from abstract Entity class
 public class BorrowRecord extends Entity {
     
     private String bookId;
@@ -14,19 +10,20 @@ public class BorrowRecord extends Entity {
     private LocalDate borrowDate;
     private LocalDate dueDate;
     private boolean isReturned;
+    private LocalDate actualReturnDate; // Lưu ngày trả thực tế
 
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    // 2. Updated Constructor matching Book pattern
-    public BorrowRecord(String recordId, String bookId, String memberId, LocalDate borrowDate, LocalDate dueDate, boolean isReturned) throws Exception {
-        super(recordId); // Passes the ID to the Entity parent class
+    public BorrowRecord(String recordId, String bookId, String memberId, LocalDate borrowDate, LocalDate dueDate, boolean isReturned, LocalDate actualReturnDate) throws Exception {
+        super(recordId); // Gọi constructor của lớp cha Entity
         
-        setId(recordId); // Uses Entity's setter
+        setId(recordId); 
         setBookId(bookId);
         setMemberId(memberId);
         setBorrowDate(borrowDate);
         setDueDate(dueDate);
         setReturned(isReturned);
+        this.actualReturnDate = actualReturnDate;
     }
 
     // --- Getters and Setters ---
@@ -45,8 +42,12 @@ public class BorrowRecord extends Entity {
     public boolean isReturned() { return isReturned; }
     public void setReturned(boolean returned) { this.isReturned = returned; }
 
-    // 3. Updated File format to include the inherited ID
+    public LocalDate getActualReturnDate() { return actualReturnDate; }
+    public void setActualReturnDate(LocalDate actualReturnDate) { this.actualReturnDate = actualReturnDate; }
+
+    // Format lưu file (7 trường dữ liệu)
     public String toFileString() {
-        return getId() + "|" + bookId + "|" + memberId + "|" + borrowDate.format(DATE_FORMAT) + "|" + dueDate.format(DATE_FORMAT) + "|" + isReturned;
+        String returnDateStr = (actualReturnDate != null) ? actualReturnDate.format(DATE_FORMAT) : "NULL";
+        return getId() + "|" + bookId + "|" + memberId + "|" + borrowDate.format(DATE_FORMAT) + "|" + dueDate.format(DATE_FORMAT) + "|" + isReturned + "|" + returnDateStr;
     }
 }
