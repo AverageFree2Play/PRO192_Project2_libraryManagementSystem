@@ -179,6 +179,48 @@ public class BorrowManagement implements BaseManagement<BorrowRecord> {
     }
 
     @Override
+    public void delete() {
+        System.out.println("\n--- Delete Borrow Record ---");
+        
+        if (borrowList.isEmpty()) {
+            System.out.println("There are no records to delete.\n");
+            return;
+        }
+
+        String transId = DataInput.getString("Enter Transaction ID to delete: ").trim().toUpperCase();
+
+        BorrowRecord recordToDelete = null;
+        
+        for (BorrowRecord record : borrowList) {
+            if (record.getId().equalsIgnoreCase(transId)) {
+                recordToDelete = record;
+                break;
+            }
+        }
+
+        if (recordToDelete == null) {
+            System.out.println(">>> ERROR: Transaction ID '" + transId + "' not found!\n");
+            return;
+        }
+
+        System.out.println("Record found:");
+        System.out.println("- Trans ID: " + recordToDelete.getId());
+        System.out.println("- Book ID: " + recordToDelete.getBookId());
+        System.out.println("- Member ID: " + recordToDelete.getMemberId());
+        System.out.println("- Status: " + (recordToDelete.isReturned() ? "Returned" : "Active (Not Returned)"));
+
+        String confirm = DataInput.getString("Are you sure you want to delete this record? (y/n): ");
+
+        if (confirm.equalsIgnoreCase("Y")) {
+            borrowList.remove(recordToDelete);
+            saveToFile();
+            System.out.println(">>> SUCCESS: Transaction '" + transId + "' has been successfully deleted.\n");
+        } else {
+            System.out.println("Deletion cancelled.\n");
+        }
+    }
+
+    @Override
     public ArrayList<BorrowRecord> get() {
         return borrowList;
     }

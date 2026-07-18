@@ -102,15 +102,15 @@ public class BusinessRules {
     }
 
     // BR5: A book can only be borrowed if the member has not exceeded their borrowing limit.
-    public static void checkBorrowLimit(List<BorrowRecord> allBorrows, String memberId) throws Exception {
+    public static void checkBorrowLimit(List<BorrowRecord> allBorrows, String memberId, int limit) throws Exception {
         int activeBorrows = 0;
         for (BorrowRecord record : allBorrows) {
             if (record.getMemberId().equalsIgnoreCase(memberId) && !record.isReturned()) {
                 activeBorrows++;
             }
         }
-        if (activeBorrows >= MAX_BORROW_LIMIT) {
-            throw new Exception("BR5 Violation: Member has reached the maximum borrowing limit (" + MAX_BORROW_LIMIT + " books).");
+        if (activeBorrows >= limit) {
+            throw new Exception("BR5 Violation: Member has reached the maximum borrowing limit (" + limit + " books).");
         }
     }
 
