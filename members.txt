@@ -1,3 +1,7 @@
 M001|Kien|0901040607|trungkien@gmail.com|Y
 M002|Vuong|0903123456|vuong123@gmail.com|N
 M003|An|0838128268|kernel330@gmail.com|Y
+M004|Bao|0987023456|baotran@outlook.com|N
+M005|Nguyen Van A|0987654567|nguyenvana@yahoo.com|Y
+M006|Nguyen Van B|0912989898|nguyenvanb123@gmail.com|N
+M007|Nguyen Dang Bao|0982222222|dangbao212@outlook.com|N

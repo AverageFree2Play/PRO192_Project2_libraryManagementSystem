@@ -191,7 +191,11 @@ public class MemberManagement {
                     member.getEmail(),
                     member.isPremium() ? "VIP" : "None");
         }
+        System.out.print(con.separator);
+        System.out.print(con.separator);
+        System.out.print("============");
         System.out.println(con.separator);
+
     }
     
     
@@ -253,13 +257,16 @@ public class MemberManagement {
             printTableHeader();
 
             for (Member m : match) {
-                System.out.printf("%-10s | %-25s | %-15s | %-30s | %-15s%n",
+                System.out.printf("| %-10s | %-25s | %-15s | %-30s | %-15s%n",
                         m.getId(),
                         m.getName(),
                         m.getPhone(),
                         m.getEmail(),
                         m.isPremium() ? "VIP" : "None");
             }
+            System.out.print(con.separator);
+            System.out.print(con.separator);
+            System.out.print("============");
             System.out.println(con.separator);
         }
     
@@ -268,11 +275,13 @@ public class MemberManagement {
     private void printTableHeader() {
         System.out.print(con.separator);
         System.out.print(con.separator);
+        System.out.print("============");
         System.out.println(con.separator);
-        System.out.printf("%-10s | %-25s | %-15s | %-30s | %-15s%n",
+        System.out.printf("| %-10s | %-25s | %-15s | %-30s | %-15s%n",
                 "ID", "Name", "Phone", "Email", "Premium");
         System.out.print(con.separator);
         System.out.print(con.separator);
+        System.out.print("============");
         System.out.println(con.separator);
     }
 
