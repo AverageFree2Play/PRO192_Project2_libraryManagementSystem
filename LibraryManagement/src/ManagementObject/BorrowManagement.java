@@ -3,6 +3,7 @@ package ManagementObject;
 import DataObjects.FileManager;
 import Entites.BorrowRecord;
 import Entites.Member; // Import thêm class Member
+import Utilities.BusinessRules;
 import Utilities.Constants;
 import Utilities.DataInput;
 
@@ -88,6 +89,7 @@ public class BorrowManagement implements BaseManagement<BorrowRecord> {
             memberMgmt.loadFromFile();
             Member foundMember = memberMgmt.findMemberByID(memberId);
             
+            // BR3: MEMBER EXISTENCE
             if (foundMember == null) {
                 System.out.println(">>> ERROR: Member ID '" + memberId + "' does not exist in the system!");
                 System.out.println(">>> Transaction cancelled.\n");
@@ -96,33 +98,29 @@ public class BorrowManagement implements BaseManagement<BorrowRecord> {
 
             String recordId = generateTransactionId();
             System.out.println("Transaction ID auto-generated: " + recordId);
-            System.out.println("Borrower Name: " + foundMember.getName()); // In tên cho thân thiện!
+            System.out.println("Borrower Name: " + foundMember.getName()); 
             
+            // BUSINESS RULES CONSTANTS FOR LIMIT
             boolean isPremium = foundMember.isPremium();
-            int borrowLimit = isPremium ? 5 : 3; // Premium borrow 5, normal 3
-            int borrowDays = isPremium ? 30 : 14; // Premium borrow for a month, normal 2 weeks
+            int borrowLimit = isPremium ? BusinessRules.PREMIUM_BORROW_LIMIT : BusinessRules.NORMAL_BORROW_LIMIT; 
+            int borrowDays = isPremium ? BusinessRules.PREMIUM_BORROW_DAYS : BusinessRules.NORMAL_BORROW_DAYS; 
             
             if (isPremium) {
                 System.out.println("*** PREMIUM MEMBER DETECTED: Limit " + borrowLimit + " books, " + borrowDays + " days ***");
             }
 
-            // 5. BORROW LIMIT
-            int activeBorrows = 0;
-            for (BorrowRecord record : borrowList) {
-                if (record.getMemberId().equals(memberId) && !record.isReturned()) {
-                    activeBorrows++;
-                }
-            }
-            
-            if (activeBorrows >= borrowLimit) {
-                System.out.println(">>> DENIED: Member " + memberId + " has reached the limit of " + borrowLimit + " unreturned books.");
+            // BR5: BUSINESS LIMIT
+            try {
+                BusinessRules.checkBorrowLimit(borrowList, memberId, borrowLimit);
+            } catch (Exception e) {
+                System.out.println(">>> DENIED: " + e.getMessage());
                 System.out.println(">>> Please return a book before borrowing a new one.\n");
                 return; 
             }
 
             String bookId = DataInput.getString("Enter Book ID: ").toUpperCase();
 
-            // 6. CALCULATE DAYS RETURN
+            // BR6: CALCULATE DAYS RETURN
             LocalDate borrowDate = LocalDate.now();
             LocalDate dueDate = borrowDate.plusDays(borrowDays); 
 
@@ -130,9 +128,10 @@ public class BorrowManagement implements BaseManagement<BorrowRecord> {
             borrowList.add(record);
             saveToFile();
 
-            System.out.println("Successfully borrowed!");
+            System.out.println(">>> SUCCESS: Book borrowed successfully!");
             System.out.println("Borrow Date: " + borrowDate.format(DATE_FORMAT));
             System.out.println("Due Date: " + dueDate.format(DATE_FORMAT) + "\n");
+            
         } catch (Exception e) {
             System.out.println("Error creating record: " + e.getMessage());
         }
