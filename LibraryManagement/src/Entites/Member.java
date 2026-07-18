@@ -9,24 +9,21 @@ public class Member extends Entity {
     private String email;
     private boolean isPremium;
 
-    /* ================= DEFAULT CONSTRUCTOR ================= */
     public Member() {
-        super("");
-
-        this.name = "N/A";
-        this.phone = "0000000000";
-        this.email = "N/A";
+        super(""); 
+        
+        this.name = "None";
+        this.phone = "0000000000"; 
+        this.email = "None@mail.com"; 
         this.isPremium = false;
     }
 
-    /* ================= MAIN CONSTRUCTOR ================= */
     public Member(String id,
                   String name,
                   String phone,
                   String email,
                   boolean isPremium) throws Exception {
-
-        super(id);
+        super(id); 
 
         setId(id);
         setName(name);
@@ -35,10 +32,8 @@ public class Member extends Entity {
         setPremium(isPremium);
     }
 
-    /* ================= ID (BR1 - UNIQUE, IMMUTABLE RULE) ================= */
     @Override
     public void setId(String id) throws Exception {
-
         if (id == null) {
             throw new Exception("ID cannot be null");
         }
@@ -49,7 +44,7 @@ public class Member extends Entity {
             throw new Exception("Invalid Member ID format (Mxxx). Example: M001");
         }
 
-        super.setId(id); // ✔ FIX: đúng encapsulation
+        super.setId(id); 
     }
 
     @Override
@@ -57,49 +52,39 @@ public class Member extends Entity {
         return super.getId();
     }
 
-    /* ================= NAME (BR2) ================= */
     public String getName() {
         return name;
     }
 
     public void setName(String name) throws Exception {
-
-        if (!DataValidation.checkStringEmpty(name)) {
+        if (name == null || !DataValidation.checkStringEmpty(name)) {
             throw new Exception("Member name cannot be empty!");
         }
-
         this.name = name.trim();
     }
 
-    /* ================= PHONE ================= */
     public String getPhone() {
         return phone;
     }
 
     public void setPhone(String phone) throws Exception {
-
-        if (!DataValidation.checkIfValidPhoneNumber(phone)) {
+        if (phone == null || !DataValidation.checkIfValidPhoneNumber(phone)) {
             throw new Exception("Invalid phone number (must be 10 digits).");
         }
-
         this.phone = phone.trim();
     }
 
-    /* ================= EMAIL ================= */
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) throws Exception {
-
-        if (!DataValidation.checkIfValidEmail(email)) {
+        if (email == null || !DataValidation.checkIfValidEmail(email)) {
             throw new Exception("Invalid email format.");
         }
-
         this.email = email.trim().toLowerCase();
     }
 
-    /* ================= PREMIUM ================= */
     public boolean isPremium() {
         return isPremium;
     }
@@ -108,17 +93,16 @@ public class Member extends Entity {
         this.isPremium = isPremium;
     }
 
-    /* ================= DISPLAY ================= */
     @Override
     public String toString() {
-
+        
         return String.format(
-                "%-5s | %-25s | %-15s | %-30s | %-10s",
+                "%-10s | %-25s | %-15s | %-30s | %-15s",
                 getId(),
                 name,
                 phone,
                 email,
-                isPremium ? "Yes" : "No"
+                isPremium ? "VIP" : "None"// new update?
         );
     }
 }
